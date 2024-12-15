@@ -3,7 +3,7 @@ using WebApp.Entities;
 
 namespace WebApp;
 
-public class WebApplicationContext : DbContext
+public class WebAppContext : DbContext
 {
     public DbSet<CardioExercise> CardioExercises { get; set; }
     public DbSet<StrengthExercise> StrengthExercises { get; set; }
