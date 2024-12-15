@@ -3574,11 +3574,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\studia\\5 sem\\dotNet\\projekt\\WebApp\\WebApp.csproj",
+      "projectUniqueName": "D:\\studia\\5sem\\dotNet\\projekt\\WebApp\\WebApp.csproj",
       "projectName": "WebApp",
-      "projectPath": "D:\\studia\\5 sem\\dotNet\\projekt\\WebApp\\WebApp.csproj",
+      "projectPath": "D:\\studia\\5sem\\dotNet\\projekt\\WebApp\\WebApp.csproj",
       "packagesPath": "C:\\Users\\Zuzia\\.nuget\\packages\\",
-      "outputPath": "D:\\studia\\5 sem\\dotNet\\projekt\\WebApp\\obj\\",
+      "outputPath": "D:\\studia\\5sem\\dotNet\\projekt\\WebApp\\obj\\",
       "projectStyle": "PackageReference",
       "UsingMicrosoftNETSdk": false,
       "configFilePaths": [
