@@ -16,6 +16,8 @@ public class WebAppContext : DbContext
     public DbSet<CarExerciseParameters> CarExerciseParameters { get; set; }
     public DbSet<Met> Mets { get; set; }
     
+    public WebAppContext(DbContextOptions<WebAppContext> options) : base(options) { }
+    
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlite("Data Source=database.db");
