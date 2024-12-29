@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.DTO;
 using WebApp.Services.UsersServices;
@@ -19,19 +21,46 @@ public class UsersController : ControllerBase
     [HttpPost("register")]
     public IActionResult RegisterUser([FromBody] CreateUserDto newUserDto)
     {
-        var userDto = _usersService.RegisterUser(newUserDto);
-        return Ok(userDto);
+        var userResponseDto = _usersService.RegisterUser(newUserDto);
+        return Ok(userResponseDto);
     }
 
     [HttpPost("login")]
-    public IActionResult LoginUser([FromBody] LoginUserDto loginUserDto)
+    public async Task<IActionResult> LoginUser([FromBody] LoginUserDto loginUserDto)
     {
-        var userDto = _usersService.LoginUser(loginUserDto);
-        if (userDto.Message is not null)
+        var userResponseDto = await _usersService.LoginUser(loginUserDto);
+        if (userResponseDto.Message is not null)
         {
-            return BadRequest(userDto.Message);
+            return BadRequest(userResponseDto.Message);
         }
 
-        return Ok(userDto);
+        return Ok(userResponseDto);
+    }
+
+    [HttpPost("logout")]
+    [Authorize]
+    public async Task<IActionResult> LogoutUser()
+    {
+        var userResponseDto = await _usersService.LogoutUser();
+        return Ok(userResponseDto);
+    }
+
+    [HttpPut("change_parameters")]
+    [Authorize]
+    public async Task<IActionResult> ChangeUserParameters([FromBody] UserParametersDto userParametersDto)
+    {
+        var userParametersResponseDto = await _usersService.ChangeUserParameters(userParametersDto);
+        if (userParametersResponseDto.Message is not null)
+        {
+            return Redirect("/user/login");
+        }
+        return Ok(userParametersResponseDto);
+    }
+    
+    [HttpPost("test")]
+    [Authorize]
+    public IActionResult Test()
+    {
+        return Ok(new {Message = "dziala"});
     }
 }

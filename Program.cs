@@ -1,11 +1,13 @@
 using System.Runtime.InteropServices.JavaScript;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using WebApp;
 using Microsoft.AspNetCore.Identity;
 using WebApp.Entities;
+using WebApp.Services.TrainingServices;
 using WebApp.Services.UsersServices;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,10 +18,30 @@ builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<WebAppContext>();
-builder.Services.AddAuthentication("cookie").AddCookie("cookie");
-builder.Services.AddAuthorization();
 builder.Services.AddScoped<IUsersService, UsersService>();
+builder.Services.AddScoped<ITrainingService, TrainingService>();
+builder.Services.AddSingleton<ICurrentTrainingSerivce, CurrentTrainingService>();
 builder.Services.AddControllers();
+// builder.Services.AddAuthentication("cookie")
+//     .AddCookie("cookie", options =>
+//     {
+//         options.LoginPath = "/user/login";
+//     });
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.IsEssential = true;
+});
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.Cookie.Name = "cookie";
+        options.LoginPath = "/user/login";
+    });
+builder.Services.AddAuthorization();
+builder.Services.AddHttpContextAccessor();
+
 // builder.Services.AddDefault
 
 var app = builder.Build();
@@ -34,7 +56,11 @@ if (app.Environment.IsDevelopment())
 }   
 
 app.UseHttpsRedirection();
+app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
+app.UseSession();
 
 // var month = DateTime.Today.Month;
 // app.MapGet("/calendar", (HttpContext context) =>

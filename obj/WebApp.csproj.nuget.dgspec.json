@@ -1,28 +1,26 @@
 {
   "format": 1,
   "restore": {
-    "D:\\studia\\5sem\\dotNet\\projekt\\WebApp\\WebApp.csproj": {}
+    "/home/zyzka/RiderProjects/gymLogsApi/WebApp.csproj": {}
   },
   "projects": {
-    "D:\\studia\\5sem\\dotNet\\projekt\\WebApp\\WebApp.csproj": {
+    "/home/zyzka/RiderProjects/gymLogsApi/WebApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\studia\\5sem\\dotNet\\projekt\\WebApp\\WebApp.csproj",
+        "projectUniqueName": "/home/zyzka/RiderProjects/gymLogsApi/WebApp.csproj",
         "projectName": "WebApp",
-        "projectPath": "D:\\studia\\5sem\\dotNet\\projekt\\WebApp\\WebApp.csproj",
-        "packagesPath": "C:\\Users\\Zuzia\\.nuget\\packages\\",
-        "outputPath": "D:\\studia\\5sem\\dotNet\\projekt\\WebApp\\obj\\",
+        "projectPath": "/home/zyzka/RiderProjects/gymLogsApi/WebApp.csproj",
+        "packagesPath": "/home/zyzka/.nuget/packages/",
+        "outputPath": "/home/zyzka/RiderProjects/gymLogsApi/obj/",
         "projectStyle": "PackageReference",
-        "UsingMicrosoftNETSdk": false,
         "configFilePaths": [
-          "C:\\Users\\Zuzia\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/home/zyzka/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "/usr/lib64/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -46,6 +44,10 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[9.0.0, )"
@@ -88,7 +90,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/lib64/dotnet/sdk/9.0.100/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

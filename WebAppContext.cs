@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using WebApp.Entities;
 
 namespace WebApp;
@@ -25,6 +26,8 @@ public class WebAppContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+        
         modelBuilder.Entity<StrengthExercise>()
             .ToTable("StrengthExercises")
             .HasBaseType((Type)null);
@@ -90,5 +93,9 @@ public class WebAppContext : DbContext
             .HasOne(e => e.CardioExercise)
             .WithMany(s => s.Mets)
             .HasForeignKey(e => e.CardioExerciseId);
+        //
+        // modelBuilder.Entity<User>()
+        //     .HasIndex(u => u.Username)
+        //     .IsUnique();
     }
 }

@@ -6,5 +6,7 @@ namespace WebApp.Services.UsersServices;
 public interface IUsersService
 {
     UserResponseDto RegisterUser(CreateUserDto newUserDto);
-    UserResponseDto LoginUser(LoginUserDto loginUserDto);
+    Task<UserResponseDto> LoginUser(LoginUserDto loginUserDto);
+    Task<UserResponseDto> LogoutUser();
+    Task<UserParametersResponseDto> ChangeUserParameters(UserParametersDto userParametersDto);
 }
