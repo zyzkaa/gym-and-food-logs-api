@@ -30,7 +30,6 @@ public class TrainingService : ITrainingService
         
         _dbContext.Trainings.Add(newTraining);
         await _dbContext.SaveChangesAsync();
-        SetCurrentTraining(newTraining);
         
         return new TrainingResponseDto(newTraining.Id, newTraining.Name);
     }
@@ -40,36 +39,8 @@ public class TrainingService : ITrainingService
         throw new NotImplementedException();
     }
 
-    public Task<TrainingResponseDto> StartTraining(TrainingDto trainingDto)
+    public Task<TrainingResponseDto> GetTrainingById(int trainingId)
     {
         throw new NotImplementedException();
-    }
-
-    public Task<TrainingResponseDto> StopTraining(TrainingDto trainingDto)
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task<TrainingResponseDto> SetCurrentTraining(int id)
-    {
-        var currentTraining = await _dbContext.Trainings.FirstOrDefaultAsync(t => t.Id == id);
-        _currentTrainingService.SetCurrentTraining(currentTraining);
-        return new TrainingResponseDto(currentTraining.Id, currentTraining.Name);
-    }
-
-    public TrainingResponseDto SetCurrentTraining(Training training)
-    {
-        _currentTrainingService.SetCurrentTraining(training);
-        return new TrainingResponseDto(training.Id, training.Name);
-    }
-
-    public Task<TrainingResponseDto> AddExercise(Exercise exercise)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Training GetCurrentTraining()
-    {
-        return _currentTrainingService.GetCurrentTraining();
     }
 }

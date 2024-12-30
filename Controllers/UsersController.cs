@@ -56,11 +56,4 @@ public class UsersController : ControllerBase
         }
         return Ok(userParametersResponseDto);
     }
-    
-    [HttpPost("test")]
-    [Authorize]
-    public IActionResult Test()
-    {
-        return Ok(new {Message = "dziala"});
-    }
 }
