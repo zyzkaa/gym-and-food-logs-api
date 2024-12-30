@@ -7,5 +7,5 @@ public class CarExerciseInTraining
 
     public CardioExercise CardioExercise { get; set; }
     public Training Training { get; set; }
-    public ICollection<CarExerciseParameters> CarExerciseParameters { get; set; }
+    public ICollection<CarExerciseParameters> CarExerciseParameters { get; set; } = new List<CarExerciseParameters>();
 }

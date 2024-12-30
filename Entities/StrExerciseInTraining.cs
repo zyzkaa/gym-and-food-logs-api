@@ -9,5 +9,7 @@ public class StrExerciseInTraining
 
     public StrengthExercise StrengthExercise { get; set; }
     public Training Training { get; set; }
-    public ICollection<StrExerciseParameters> StrExerciseParameters { get; set; }
+    public ICollection<StrExerciseParameters> StrExerciseParameters { get; set; } = new List<StrExerciseParameters>();
+    
+    public StrExerciseInTraining(){}
 }

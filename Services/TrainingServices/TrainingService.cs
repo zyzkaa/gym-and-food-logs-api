@@ -9,24 +9,57 @@ public class TrainingService : ITrainingService
 {
     private readonly WebAppContext _dbContext;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly ICurrentTrainingSerivce _currentTrainingService;
 
-    public TrainingService(WebAppContext dbContext, IHttpContextAccessor httpContextAccessor, ICurrentTrainingSerivce currentTrainingService)
+    public TrainingService(WebAppContext dbContext, IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
         _httpContextAccessor = httpContextAccessor;
-        _currentTrainingService = currentTrainingService;
     }
         
     public async Task<TrainingResponseDto> AddTraining(TrainingDto trainingDto)
     {
-        DateTime date = DateTime.Parse(_httpContextAccessor.HttpContext.Session.GetString("date"));
-        date += new TimeSpan(trainingDto.StartHour, trainingDto.StartMinute, 0);
         TimeSpan duration = new TimeSpan(trainingDto.Hours, trainingDto.Minutes, 0);
-        string currentUser = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-        User user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == int.Parse(currentUser));
         
-        var newTraining = new Training(trainingDto.Name, date, duration, user);
+        string currentUserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        User user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == int.Parse(currentUserId));
+
+        var newTraining = new Training(trainingDto.Name, trainingDto.date, duration, user);
+        
+        foreach (var strExercise in trainingDto.StrExercises)
+        {
+            StrengthExercise exercise = await _dbContext.StrengthExercises.FirstOrDefaultAsync(e => e.Name == strExercise.Name);
+            
+            var strExerciseInTraining = new StrExerciseInTraining
+            {
+                StrengthExercise = exercise,
+            };
+
+            foreach (var (set, index) in strExercise.Sets.Select((set, index) => (set, index)))
+            {
+                var strExerciseParameters = new StrExerciseParameters(index, set.Weight, set.Repetitions);
+                strExerciseInTraining.StrExerciseParameters.Add(strExerciseParameters);
+            }
+
+            newTraining.StrExerciseInTrainings.Add(strExerciseInTraining);
+        }
+        
+        foreach (var carExercise in trainingDto.CarExercises)
+        {
+            CardioExercise exercise = await _dbContext.CardioExercises.FirstOrDefaultAsync(e => e.Name == carExercise.Name);
+            
+            var carExerciseInTraining = new CarExerciseInTraining
+            {
+                CardioExercise = exercise,
+            };
+
+            foreach (var (set, index) in carExercise.Sets.Select((set, index) => (set, index)))
+            {
+                var carExerciseParameters = new CarExerciseParameters(index, set.Speed, set.Seconds);
+                carExerciseInTraining.CarExerciseParameters.Add(carExerciseParameters);
+            }
+
+            newTraining.CarExerciseInTrainings.Add(carExerciseInTraining);
+        }
         
         _dbContext.Trainings.Add(newTraining);
         await _dbContext.SaveChangesAsync();

@@ -12,6 +12,9 @@ using WebApp.Services.UsersServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// trzeba zmienic nazwe repository !!!!!!!!!!!!!!!!!!!!!!!!!!1
+
+
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -20,13 +23,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<WebAppContext>();
 builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<ITrainingService, TrainingService>();
-builder.Services.AddSingleton<ICurrentTrainingSerivce, CurrentTrainingService>();
 builder.Services.AddControllers();
-// builder.Services.AddAuthentication("cookie")
-//     .AddCookie("cookie", options =>
-//     {
-//         options.LoginPath = "/user/login";
-//     });
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
@@ -50,8 +47,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddAuthorization();
 builder.Services.AddHttpContextAccessor();
 
-// builder.Services.AddDefault
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -70,6 +65,8 @@ app.UseAuthorization();
 app.MapControllers();
 app.UseSession();
 
+
+// leaving the endpoint from the template
 // var month = DateTime.Today.Month;
 // app.MapGet("/calendar", (HttpContext context) =>
 // {
@@ -89,71 +86,7 @@ app.UseSession();
 //     return days;
 // }).WithName("GetCalendar");
 //
-// app.MapGet("/dayView", async (string day, WebAppContext dbContext) =>
-// {
-//     DateTime date = DateTime.Parse(day);
-//     var trainings = dbContext.Trainings
-//         .Where(training => training.Date == date);
-//     return "day";
-//
-// }).WithName("GetDayView");
-//
-// app.MapPost("/register", (string username, string password, WebAppContext dbContext) =>
-// {
-//     dbContext.Users.Add(new User(username, password));
-//     dbContext.SaveChanges();
-//     return "success";
-//     
-// }).WithName("Register");
-//
-// app.MapGet("/login", async (string username, string password, WebAppContext dbContext, HttpContext httpContext) =>
-// {
-//     await httpContext.SignOutAsync("cookie");
-//     var userFromDb = await dbContext.Users.FirstOrDefaultAsync(u => u.Username == username);
-//     
-//     if (userFromDb == null)
-//     {
-//         httpContext.Response.StatusCode = 401;
-//         return null;
-//     }
-//
-//     if (userFromDb.Password != password)
-//     {
-//         httpContext.Response.StatusCode = 401;
-//         return null;
-//     }
-//     
-//     var claims = new List<Claim>();
-//     claims.Add(new Claim("id", userFromDb.Id.ToString()));
-//     var identity = new ClaimsIdentity(claims, "cookie");
-//     var user = new ClaimsPrincipal(identity);
-//     
-//     await httpContext.SignInAsync("cookie", user);
-//     return "success";
-// }).WithName("Login");
-//
-// app.UseAuthentication();
-//
-// app.MapGet("/usrId", (WebAppContext dbContext, HttpContext httpContext ) =>
-// {
-//     var user = httpContext.User.FindFirst("id").Value;
-//     return user;
-// });
-//
-// app.MapGet("/logout", (HttpContext httpContext) =>
-// {
-//     httpContext.SignOutAsync("cookie");
-// });
-//
-// app.MapPost("/newTraining", (string name, WebAppContext dbContext, HttpContext httpContext) =>
-// {
-//     var userId = httpContext.User.FindFirst("id").Value;
-//     var user = dbContext.Users.FirstOrDefault(u => u.Id.ToString() == userId);
-//     var newTraining = new Training(name, DateTime.Now);
-//     newTraining.User = user;
-//     dbContext.Trainings.Add(newTraining);
-//     dbContext.SaveChanges();
-// });
+
 
 app.Run();
 

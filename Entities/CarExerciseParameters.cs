@@ -8,4 +8,11 @@ public class CarExerciseParameters
     public int CarExerciseInTrainingCardioExerciseId  { get; set; }
     public int CarExerciseInTrainingTrainingId { get; set; }
     public CarExerciseInTraining CarExerciseInTraining { get; set; }
+
+    public CarExerciseParameters(int interval, int speed, int seconds)
+    {
+        Interval = interval;
+        Speed = speed;
+        Seconds = seconds;
+    }
 }

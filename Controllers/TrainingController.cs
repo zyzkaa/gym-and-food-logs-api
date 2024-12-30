@@ -26,15 +26,21 @@ public class TrainingController : ControllerBase
         return Ok(trainingResponseDto);
     }
 
-    [HttpPost("set_current")]
+    [HttpDelete("delete")]
     public async Task<TrainingResponseDto> SetCurrentTraining(int id)
     {
-        return await _trainingService.SetCurrentTraining(id);
+        return null;
     }
 
-    [HttpGet("get_current")]
+    [HttpGet("get_by_id")]
     public Training GetCurrentTraining()
     {
-        return _trainingService.GetCurrentTraining();
+        return null;
+    }
+
+    [HttpGet("get_all")]
+    public IEnumerable<Training> GetAllTrainings()
+    {
+        return null;
     }
 }
