@@ -6,7 +6,7 @@ namespace WebApp.Entities;
 [Index(nameof(Username), IsUnique = true)]
 public class User
 {
-    public new int Id { get; set; }
+    public int Id { get; set; }
     public string Username { get; set; }
     public string Password { get; set; }
     public int Weight { get; set; }
@@ -14,16 +14,5 @@ public class User
     public int Age { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? ModifiedAt { get; set; }
-    
-    public User() {}
-
-    public User(string username, string password, int weight, int height, int age, DateTime createdAt)
-    {
-        Username = username;
-        Password = password;
-        Weight = weight;
-        Height = height;
-        Age = age;
-        CreatedAt = createdAt;
-    }
+    public ICollection<Training> Trainings { get; set; }
 }

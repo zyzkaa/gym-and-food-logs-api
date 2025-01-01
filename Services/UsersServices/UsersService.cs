@@ -21,19 +21,24 @@ public class UsersService : IUsersService
     
     public UserResponseDto RegisterUser(CreateUserDto newUserDto)
     {
-        var newUser = new User(newUserDto.Username, newUserDto.Password,
-            newUserDto.Weight, newUserDto.Height, newUserDto.Age, DateTime.Now);
-        // try
-        // {
-        //     _dbContext.Users.Add(newUser);
-        // }
-        // catch (DbUpdateException e)
-        // {
-        //     return new UserResponseDto(e.Message);
-        // }
+        var newUser = new User()
+        {
+            Username = newUserDto.Username,
+            Password = newUserDto.Password,
+            Weight = newUserDto.Weight,
+            Height = newUserDto.Height,
+            Age = newUserDto.Age,
+            CreatedAt = DateTime.Now
+        };
+        
         _dbContext.Users.Add(newUser);
         _dbContext.SaveChanges();
-        return new UserResponseDto(newUser.Id, newUser.Username);
+        
+        return new UserResponseDto()
+        {
+            Id = newUser.Id,
+            Username = newUser.Username
+        };
     }
 
     public async Task<UserResponseDto> LoginUser(LoginUserDto loginUserDto)
@@ -41,12 +46,18 @@ public class UsersService : IUsersService
         var user = _dbContext.Users.FirstOrDefault(u => u.Username == loginUserDto.Username);
         if (user == null)
         {
-            return new UserResponseDto("username not found");
+            return new UserResponseDto()
+            {
+                Message = "username not found"
+            };
         }
 
         if (user.Password != loginUserDto.Password)
         {
-            return new  UserResponseDto("wrong password");
+            return new  UserResponseDto()
+            {
+                Message = "wrong password"
+            };
         }
         
         var claims = new List<Claim>
@@ -56,7 +67,11 @@ public class UsersService : IUsersService
         var identity = new ClaimsIdentity(claims, "authScheme");
         var principal = new ClaimsPrincipal(identity);
         await _httpContentAccessor.HttpContext.SignInAsync(principal);
-        return new UserResponseDto(user.Id, user.Username);
+        return new UserResponseDto()
+        {
+            Id = user.Id,
+            Username = user.Username
+        };
     }
 
     public async Task<UserResponseDto> LogoutUser()
@@ -65,11 +80,17 @@ public class UsersService : IUsersService
         {
             var currentUserId = _httpContentAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             await _httpContentAccessor.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return new UserResponseDto("logged out");
+            return new UserResponseDto()
+            {
+                Message = "logged out"
+            };
         }
         catch (Exception e)
         {
-            return new UserResponseDto("user not logged in");
+            return new UserResponseDto()
+            {
+                Message = "user not logged in"
+            };
         }
     }
 
@@ -81,6 +102,11 @@ public class UsersService : IUsersService
         user.Height = userParametersDto.Height;
         user.Weight = userParametersDto.Weight;
         await _dbContext.SaveChangesAsync();
-        return new UserParametersResponseDto(user.Weight, user.Height, user.Age);
+        return new UserParametersResponseDto()
+        {
+            Age = userParametersDto.Age,
+            Weight = userParametersDto.Weight,
+            Height = userParametersDto.Height
+        };
     }
 }

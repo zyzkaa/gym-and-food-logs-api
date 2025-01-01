@@ -16,63 +16,24 @@ public class TrainingService : ITrainingService
         _httpContextAccessor = httpContextAccessor;
     }
         
-    public async Task<TrainingResponseDto> AddTraining(TrainingDto trainingDto)
+    public async Task<Training> AddTraining(Training training)
     {
-        TimeSpan duration = new TimeSpan(trainingDto.Hours, trainingDto.Minutes, 0);
-        
-        string currentUserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-        User user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == int.Parse(currentUserId));
-
-        var newTraining = new Training(trainingDto.Name, trainingDto.date, duration, user);
-        
-        foreach (var strExercise in trainingDto.StrExercises)
-        {
-            StrengthExercise exercise = await _dbContext.StrengthExercises.FirstOrDefaultAsync(e => e.Name == strExercise.Name);
-            
-            var strExerciseInTraining = new StrExerciseInTraining
-            {
-                StrengthExercise = exercise,
-            };
-
-            foreach (var (set, index) in strExercise.Sets.Select((set, index) => (set, index)))
-            {
-                var strExerciseParameters = new StrExerciseParameters(index, set.Weight, set.Repetitions);
-                strExerciseInTraining.StrExerciseParameters.Add(strExerciseParameters);
-            }
-
-            newTraining.StrExerciseInTrainings.Add(strExerciseInTraining);
-        }
-        
-        foreach (var carExercise in trainingDto.CarExercises)
-        {
-            CardioExercise exercise = await _dbContext.CardioExercises.FirstOrDefaultAsync(e => e.Name == carExercise.Name);
-            
-            var carExerciseInTraining = new CarExerciseInTraining
-            {
-                CardioExercise = exercise,
-            };
-
-            foreach (var (set, index) in carExercise.Sets.Select((set, index) => (set, index)))
-            {
-                var carExerciseParameters = new CarExerciseParameters(index, set.Speed, set.Seconds);
-                carExerciseInTraining.CarExerciseParameters.Add(carExerciseParameters);
-            }
-
-            newTraining.CarExerciseInTrainings.Add(carExerciseInTraining);
-        }
-        
-        _dbContext.Trainings.Add(newTraining);
-        await _dbContext.SaveChangesAsync();
-        
-        return new TrainingResponseDto(newTraining.Id, newTraining.Name);
+        _dbContext.Trainings.Add(training);
+        _dbContext.SaveChanges();
+        return training;
     }
 
-    public Task<TrainingResponseDto> GetTrainings()
+    public async Task<IEnumerable<Training>> GetTrainings()
     {
         throw new NotImplementedException();
     }
 
-    public Task<TrainingResponseDto> GetTrainingById(int trainingId)
+    public Task<Training> GetTrainingById(int trainingId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IEnumerable<Training>> GetTrainingsByDate(DateOnly date)
     {
         throw new NotImplementedException();
     }

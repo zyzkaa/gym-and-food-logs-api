@@ -2,10 +2,9 @@
 
 public class CarExerciseInTraining
 {
-    public int TrainingId { get; set; }
-    public int CardioExerciseId { get; set; }
-
+    public int Id { get; set; }
     public CardioExercise CardioExercise { get; set; }
-    public Training Training { get; set; }
-    public ICollection<CarExerciseParameters> CarExerciseParameters { get; set; } = new List<CarExerciseParameters>();
+    public int Set { get; set; }
+    public int Weight { get; set; }
+    public int Repetitions { get; set; }
 }

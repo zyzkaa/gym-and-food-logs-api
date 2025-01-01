@@ -5,7 +5,8 @@ namespace WebApp.Services.TrainingServices;
 
 public interface ITrainingService
 {
-    public Task<TrainingResponseDto> AddTraining(TrainingDto trainingDto);
-    public Task<TrainingResponseDto> GetTrainings();
-    public Task<TrainingResponseDto> GetTrainingById(int trainingId);
+    public Task<Training> AddTraining(Training training);
+    // public Task<IEnumerable<Training>> GetTrainings();
+    // public Task<Training> GetTrainingById(int trainingId);
+    // public Task<IEnumerable<Training>> GetTrainingsByDate (DateOnly date);
 }

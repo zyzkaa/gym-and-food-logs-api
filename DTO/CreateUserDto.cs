@@ -2,8 +2,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WebApp.DTO;
 
-//dodaj atrybuty 
-
 public class CreateUserDto
 {
     public string Username { get; set; }

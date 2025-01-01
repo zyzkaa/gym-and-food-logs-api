@@ -20,27 +20,33 @@ public class TrainingController : ControllerBase
     }
 
     [HttpPost("add")]
-    public async Task<IActionResult> AddTraining([FromBody] TrainingDto trainingDto)
+    public async Task<IActionResult> AddTraining([FromBody] Training training)
     {
-        var trainingResponseDto = await _trainingService.AddTraining(trainingDto);
-        return Ok(trainingResponseDto);
+        var trainingResponse = await _trainingService.AddTraining(training);
+        return Ok(trainingResponse);
     }
 
-    [HttpDelete("delete")]
-    public async Task<TrainingResponseDto> SetCurrentTraining(int id)
-    {
-        return null;
-    }
-
-    [HttpGet("get_by_id")]
-    public Training GetCurrentTraining()
-    {
-        return null;
-    }
-
-    [HttpGet("get_all")]
-    public IEnumerable<Training> GetAllTrainings()
-    {
-        return null;
-    }
+    // [HttpDelete("delete")]
+    // public async Task<TrainingResponseDto> SetCurrentTraining(int id)
+    // {
+    //     return null;
+    // }
+    //
+    // [HttpGet("get_by_id")]
+    // public Training GetCurrentTraining()
+    // {
+    //     return null;
+    // }
+    //
+    // [HttpGet("get_all")]
+    // public async Task<IEnumerable<Training>> GetAllTrainings()
+    // {
+    //     return await _trainingService.GetTrainings();
+    // }
+    //
+    // [HttpGet("get_by_id/{id}")] //????????????
+    // public async Task<Training> GetTrainingById(int id)
+    // {
+    //     return await _trainingService.GetTrainingById(id);
+    // }
 }
