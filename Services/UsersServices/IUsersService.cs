@@ -1,12 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 using WebApp.DTO;
+using WebApp.Entities;
 
 namespace WebApp.Services.UsersServices;
 
 public interface IUsersService
 {
-    UserResponseDto RegisterUser(CreateUserDto newUserDto);
+    UserResponseDto RegisterUser(User newUser);
     Task<UserResponseDto> LoginUser(LoginUserDto loginUserDto);
     Task<UserResponseDto> LogoutUser();
-    Task<UserParametersResponseDto> ChangeUserParameters(UserParametersDto userParametersDto);
+    User GetUser();
+    Task<UserResponseDto> ChangeUserParameters(UserParametersDto userParametersDto);
 }

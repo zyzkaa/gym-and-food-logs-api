@@ -20,7 +20,7 @@ public class TrainingController : ControllerBase
     }
 
     [HttpPost("add")]
-    public async Task<IActionResult> AddTraining([FromBody] Training training)
+    public async Task<IActionResult> AddTraining(Training training)
     {
         var trainingResponse = await _trainingService.AddTraining(training);
         return Ok(trainingResponse);

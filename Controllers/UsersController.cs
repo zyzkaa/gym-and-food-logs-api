@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.DTO;
+using WebApp.Entities;
 using WebApp.Services.UsersServices;
 
 namespace WebApp.Controllers;
@@ -19,9 +20,9 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost("register")]
-    public IActionResult RegisterUser([FromBody] CreateUserDto newUserDto)
+    public IActionResult RegisterUser([FromBody] User newUser)
     {
-        var userResponseDto = _usersService.RegisterUser(newUserDto);
+        var userResponseDto = _usersService.RegisterUser(newUser);
         return Ok(userResponseDto);
     }
 
@@ -29,12 +30,8 @@ public class UsersController : ControllerBase
     public async Task<IActionResult> LoginUser([FromBody] LoginUserDto loginUserDto)
     {
         var userResponseDto = await _usersService.LoginUser(loginUserDto);
-        if (userResponseDto.Message is not null)
-        {
-            return BadRequest(userResponseDto.Message);
-        }
-
-        return Ok(userResponseDto);
+        
+        return userResponseDto.Message != null ? Ok(userResponseDto) : NotFound(userResponseDto.Message);
     }
 
     [HttpPost("logout")]
@@ -50,10 +47,12 @@ public class UsersController : ControllerBase
     public async Task<IActionResult> ChangeUserParameters([FromBody] UserParametersDto userParametersDto)
     {
         var userParametersResponseDto = await _usersService.ChangeUserParameters(userParametersDto);
-        if (userParametersResponseDto.Message is not null)
-        {
-            return Redirect("/user/login");
-        }
         return Ok(userParametersResponseDto);
+    }
+
+    [HttpGet]
+    public IActionResult GetUser()
+    {
+        return Ok(_usersService.GetUser());
     }
 }
