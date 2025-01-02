@@ -16,7 +16,8 @@ public class User
     public int Weight { get; set; }
     public int Height { get; set; }
     public int Age { get; set; }
-    public DateTime CreatedAt { get; set; }
+    [SwaggerSchema(ReadOnly = true)]
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     [SwaggerSchema(ReadOnly = true)]
     public DateTime? ModifiedAt { get; set; }
     [SwaggerSchema(ReadOnly = true)]

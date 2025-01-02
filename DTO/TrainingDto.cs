@@ -6,17 +6,13 @@ namespace WebApp.DTO;
 
 public class TrainingDto
 {
-    [MaxLength(50)]
     public string Name { get; set; }
-    public int Hours { get; set; }
-    public int Minutes { get; set; }
-    public DateOnly date { get; set; }
+    public DateOnly Date { get; set; }
+    public TimeSpan? Duration { get; set; } = TimeSpan.Zero;
 
-    public record StrSet(int Weight, int Repetitions);
-    public record StrExercise(string Name, IEnumerable<StrSet> Sets);
-    public IEnumerable<StrExercise> StrExercises { get; set; }    
+    public record StrExercise(int ExerciseId, int Set, int Weight, int Repetitions);
+    public ICollection<StrExercise> StrExercises { get; set; }
     
-    public record CarSet(int Speed, int Seconds);
-    public record CarExercise(string Name, IEnumerable<CarSet> Sets);
-    public IEnumerable<CarExercise> CarExercises { get; set; }
+    public record CarExercise(int ExerciseId, int Interval, int Speed, TimeSpan Time);
+    public ICollection<CarExercise> CarExercises { get; set; }
 }

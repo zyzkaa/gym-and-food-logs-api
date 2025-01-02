@@ -6,12 +6,16 @@ namespace WebApp;
 
 public class WebAppContext : DbContext
 {
-    public DbSet<StrengthExercise> StrengthExercises { get; set; }
-    public DbSet<Muscle> Muscles { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<Training> Trainings { get; set; }
+
+    public DbSet<StrengthExercise> StrengthExercises { get; set; }
+    public DbSet<Muscle> Muscles { get; set; }
     public DbSet<StrExerciseInTraining> StrExerciseInTrainings { get; set; }
-    // mets, car ex i car ex in tr
+    
+    public DbSet<CardioExercise> CardioExercises { get; set; }
+    public DbSet<CarExerciseInTraining> CardioExercisesInTrainings { get; set; }
+    public DbSet<Met> Mets { get; set; }
     
     public WebAppContext(DbContextOptions<WebAppContext> options) : base(options) { }
     

@@ -1,4 +1,6 @@
-﻿namespace WebApp.Entities;
+﻿using Swashbuckle.AspNetCore.Annotations;
+
+namespace WebApp.Entities;
 
 public class StrengthExercise : Exercise
 {

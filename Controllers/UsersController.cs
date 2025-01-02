@@ -31,7 +31,7 @@ public class UsersController : ControllerBase
     {
         var userResponseDto = await _usersService.LoginUser(loginUserDto);
         
-        return userResponseDto.Message != null ? Ok(userResponseDto) : NotFound(userResponseDto.Message);
+        return userResponseDto.Message == null ? Ok(userResponseDto) : NotFound(userResponseDto.Message);
     }
 
     [HttpPost("logout")]

@@ -13,6 +13,7 @@ public class UsersService : IUsersService
 {
     private readonly WebAppContext _dbContext;
     private readonly IHttpContextAccessor _httpContentAccessor;
+    
     public UsersService(WebAppContext dbContext, IHttpContextAccessor httpContextAccessor)
     {   
         _dbContext = dbContext;

@@ -15,26 +15,92 @@ public class TrainingService : ITrainingService
         _dbContext = dbContext;
         _httpContextAccessor = httpContextAccessor;
     }
-        
-    public async Task<Training> AddTraining(Training training)
+
+    User getCurrentUser()
     {
-        _dbContext.Trainings.Add(training);
+        string currentUserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        User currnetUser = _dbContext.Users.Find(int.Parse(currentUserId));
+        return currnetUser;
+    }
+        
+    public async Task<Training> AddTraining(TrainingDto trainingDto)
+    {
+        Training newTraining = new Training()
+        {
+            Name = trainingDto.Name,
+            Date = trainingDto.Date,
+            Duration = trainingDto.Duration,
+            User = getCurrentUser()
+        };
+        
+        foreach (var strExerciseInTraining in trainingDto.StrExercises)
+        {
+            StrExerciseInTraining newStrEx = new StrExerciseInTraining()
+            {
+                Set = strExerciseInTraining.Set,
+                Weight = strExerciseInTraining.Weight,
+                Repetitions = strExerciseInTraining.Repetitions,
+                StrengthExercise = _dbContext.StrengthExercises.Find(strExerciseInTraining.ExerciseId)
+            };
+            newTraining.StrExercises.Add(newStrEx);
+        }
+        
+        foreach (var trainingDtoCarExercise in trainingDto.CarExercises)
+        {
+            CarExerciseInTraining newCarEx = new CarExerciseInTraining()
+            {
+                Inteval = trainingDtoCarExercise.Interval,
+                Speed = trainingDtoCarExercise.Speed,
+                Time = trainingDtoCarExercise.Time,
+                CardioExercise = _dbContext.CardioExercises.Find(trainingDtoCarExercise.ExerciseId)
+            };
+            newTraining.CarExercises.Add(newCarEx);
+        }
+        
+        _dbContext.Trainings.Add(newTraining);
         _dbContext.SaveChanges();
-        return training;
+        return newTraining;
     }
 
     public async Task<IEnumerable<Training>> GetTrainings()
     {
-        throw new NotImplementedException();
+        return _dbContext.Trainings
+            .Include(t => t.StrExercises)
+            .ThenInclude(str => str.StrengthExercise)
+            .Include(t => t.CarExercises)
+            .ThenInclude(car => car.CardioExercise)
+            .Where(t => t.User == getCurrentUser());
     }
 
-    public Task<Training> GetTrainingById(int trainingId)
+    public async Task<Training> GetTrainingById(int trainingId)
     {
-        throw new NotImplementedException();
+        // var training = await _dbContext.Trainings.FindAsync(trainingId);
+        // return training.User == getCurrentUser() ? training : null;
+        return await _dbContext.Trainings.FindAsync(trainingId);
     }
 
-    public Task<IEnumerable<Training>> GetTrainingsByDate(DateOnly date)
+    public async Task<IEnumerable<Training>> GetTrainingsByDate(DateOnly date)
     {
-        throw new NotImplementedException();
+        return _dbContext.Trainings
+            .Include(t => t.StrExercises)
+            .ThenInclude(str => str.StrengthExercise)
+            .Include(t => t.CarExercises)
+            .ThenInclude(car => car.CardioExercise)
+            .Where(t => t.Date == date)
+            .Where(t => t.User == getCurrentUser());
+    }
+
+    public async Task<StrengthExercise> GetStrengthExerciseById(int strExerciseId)
+    {
+        return await _dbContext.StrengthExercises
+            .Include(e => e.Muscles)
+            .FirstOrDefaultAsync(e => e.Id == strExerciseId);
+    }
+
+    public async Task<Training> DeleteTrainingById(int trainingId)
+    {
+        Training trainingToDelete = await _dbContext.Trainings.FindAsync(trainingId);
+        _dbContext.Trainings.Remove(trainingToDelete);
+        return trainingToDelete;
     }
 }
