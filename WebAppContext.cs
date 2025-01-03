@@ -18,6 +18,11 @@ public class WebAppContext : DbContext
     public DbSet<CarExerciseInTraining> CardioExercisesInTrainings { get; set; }
     public DbSet<Met> Mets { get; set; }
     
+    public DbSet<Product> Products { get; set; }
+    public DbSet<Meal> Meals { get; set; }
+    public DbSet<MealIngredient> MealIngredients { get; set; }
+    public DbSet<MealPlan> MealPlans { get; set; }
+    
     public WebAppContext(DbContextOptions<WebAppContext> options) : base(options) { }
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
