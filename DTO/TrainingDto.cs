@@ -10,9 +10,11 @@ public class TrainingDto
     public DateOnly Date { get; set; }
     public TimeSpan? Duration { get; set; } = TimeSpan.Zero;
 
-    public record StrExercise(int ExerciseId, int Set, int Weight, int Repetitions);
-    public ICollection<StrExercise> StrExercises { get; set; }
-    
-    public record CarExercise(int ExerciseId, int Interval, int Speed, TimeSpan Time);
-    public ICollection<CarExercise> CarExercises { get; set; }
+    public record StrParamsDto(int set, int weight, int repetitions);
+    public record StrengthExerciseDto(int ExerciseId, IEnumerable<StrParamsDto> StrParams);
+    public ICollection<StrengthExerciseDto> StrExercisesDto { get; set; }
+
+    public record CarParamsDto(int interval, int speed, TimeSpan time);
+    public record CarExerciseDto(int ExerciseId, IEnumerable<CarParamsDto> CarParams);
+    public ICollection<CarExerciseDto> CarExercisesDto { get; set; }
 }

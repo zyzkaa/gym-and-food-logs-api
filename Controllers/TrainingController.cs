@@ -27,27 +27,51 @@ public class TrainingController : ControllerBase
     }
 
     [HttpDelete("delete/{id}")]
-    public async Task<Training> SetCurrentTraining(int id)
+    public async Task<IActionResult> DeleteTrainingById(int id)
     {
-        return await _trainingService.DeleteTrainingById(id);
+        var trainingResponse = await _trainingService.DeleteTrainingById(id);
+        return Ok(trainingResponse);
     }
-    
 
     [HttpGet("get_all")]
-    public async Task<IEnumerable<Training>> GetAllTrainings()
+    public async Task<List<Training>> GetAllTrainings()
     {
         return await _trainingService.GetTrainings();
     }
     
-    [HttpGet("get/{id}")] //????????????
+    [HttpGet("get_by_id/{id}")] //????????????
     public async Task<Training> GetTrainingById(int id)
     {
         return await _trainingService.GetTrainingById(id);
     }
 
+    [HttpGet("get_by_date/{date}")]
+    public async Task<List<Training>> GetTrainingsByDate(DateOnly date)
+    {
+        return await _trainingService.GetTrainingsByDate(date);
+    }
+
     [HttpGet("get_strength_exercise/{id}")]
-    public async Task<StrengthExercise> Get(int id)
+    public async Task<StrengthExercise> GetStrExById(int id)
     {
        return await _trainingService.GetStrengthExerciseById(id);
+    }
+
+    [HttpGet("get_cardio_exercise/{id}")]
+    public async Task<CardioExercise> GetCarExById(int id)
+    {
+        return await _trainingService.GetCardioExerciseById(id);
+    }
+
+    [HttpGet("get_cardio_exercises")]
+    public async Task<List<CardioExercise>> GetCardioExercises()
+    {
+        return await _trainingService.GetCardioExercises();
+    }
+    
+    [HttpGet("get_strength_exercises")]
+    public async Task<List<StrengthExercise>> GetStrengthExercises()
+    {
+        return await _trainingService.GetStrengthExercises();
     }
 }

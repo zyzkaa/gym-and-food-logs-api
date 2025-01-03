@@ -12,6 +12,7 @@ public class WebAppContext : DbContext
     public DbSet<StrengthExercise> StrengthExercises { get; set; }
     public DbSet<Muscle> Muscles { get; set; }
     public DbSet<StrExerciseInTraining> StrExerciseInTrainings { get; set; }
+    public DbSet<StrParams> StrParams { get; set; }
     
     public DbSet<CardioExercise> CardioExercises { get; set; }
     public DbSet<CarExerciseInTraining> CardioExercisesInTrainings { get; set; }
