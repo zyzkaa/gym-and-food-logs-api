@@ -52,8 +52,14 @@ public class TrainingController : ControllerBase
     }
 
     [HttpGet("get_training_by_strength_exercise_id/{id}")]
-    public async Task<List<Training>> GetTrainingsByStrengthExerciseId(int id)
+    public async Task<List<Training>> GetTrainingsByStrExerciseId(int id)
     {
         return await _trainingService.GetTrainingsByStrExerciseId(id);
+    }
+    
+    [HttpGet("get_training_by_cardio_exercise_id/{id}")]
+    public async Task<List<Training>> GetTrainingsByCarExerciseId(int id)
+    {
+        return await _trainingService.GetTrainingsByCarExerciseId(id);
     }
 }

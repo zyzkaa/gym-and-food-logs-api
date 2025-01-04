@@ -104,22 +104,11 @@ public class TrainingService : ITrainingService
 
     public async Task<Training> GetTrainingById(int trainingId)
     {
-        // var training = await _dbContext.Trainings.FindAsync(trainingId);
-        // return training.User == getCurrentUser() ? training : null;
-        // return await _dbContext.Trainings
-        //     .Include(t => t.StrExercises)
-        //         .ThenInclude(e => e.StrengthExercise)
-        //     .Include(t => t.StrExercises)
-        //         .ThenInclude(e => e.StrParams)
-        //     .Include(t => t.CarExercises)
-        //         .ThenInclude(e => e.CardioExercise)
-        //     .Include(t => t.CarExercises)
-        //         .ThenInclude(e => e.CarParams)
-        //     .FirstOrDefaultAsync(t => t.Id == trainingId);
-
-        return await GetTrainingSummary()
-            .FirstOrDefaultAsync(t => t.Id == trainingId)
-            ?? throw new KeyNotFoundException("Training not found");
+        var training = await GetTrainingSummary()
+                           .FirstOrDefaultAsync(t => t.Id == trainingId)
+                       ?? throw new KeyNotFoundException("Training not found");
+        
+        return training.User == GetCurrentUser() ? training : null;
     }
 
     public async Task<List<Training>> GetTrainingsByDate(DateOnly date)
@@ -185,4 +174,15 @@ public class TrainingService : ITrainingService
             .Where(t => t.StrExercises.Any(e => e.StrengthExercise.Id == exerciseId))
             .ToListAsync();
     }
+
+    public async Task<List<Training>> GetTrainingsByCarExerciseId(int exerciseId)
+    {
+        var execise = await _dbContext.CardioExercises.FindAsync(exerciseId)
+                      ?? throw new KeyNotFoundException("Exercise not found");
+        
+        return await GetTrainingSummary()
+            .Where(t => t.CarExercises.Any(e => e.CardioExercise.Id == exerciseId))
+            .ToListAsync();
+    }
+
 }

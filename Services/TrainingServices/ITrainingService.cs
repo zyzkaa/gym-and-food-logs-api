@@ -12,5 +12,5 @@ public interface ITrainingService
     public Task<Training> DeleteTrainingById(int trainingId);
     //public TrainingResponseDto GetTrainingDetails(int trainingId);
     public Task<List<Training>> GetTrainingsByStrExerciseId(int exerciseId);
-    //get training by exercise
+    public Task<List<Training>> GetTrainingsByCarExerciseId(int exerciseId);
 }
