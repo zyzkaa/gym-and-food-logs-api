@@ -44,9 +44,9 @@ public class TrainingService : ITrainingService
             { 
                 var newParams = new StrParams()
                 {
-                    Set = strParams.set,
-                    Weight = strParams.weight,
-                    Repetitions = strParams.repetitions
+                    Set = strParams.Set,
+                    Weight = strParams.Weight,
+                    Repetitions = strParams.Repetitions
                 };
                 newStrEx.StrParams.Add(newParams);
             }
@@ -65,9 +65,9 @@ public class TrainingService : ITrainingService
             {
                 var newParams = new CarParams()
                 {
-                    Inteval = carParams.interval,
-                    Speed = carParams.speed,
-                    Time = carParams.time
+                    Inteval = carParams.Interval,
+                    Speed = carParams.Speed,
+                    Time = carParams.Time
                 };
                 newCarEx.CarParams.Add(newParams);
             }
@@ -136,33 +136,17 @@ public class TrainingService : ITrainingService
 
     public async Task<Training> DeleteTrainingById(int trainingId)
     {
-        Training trainingToDelete = await GetTrainingWithDetails()
-                                        .FirstOrDefaultAsync(t => t.Id == trainingId) 
-                                    ?? throw new KeyNotFoundException("Training not found");
-        
-        foreach (var strExerciseInTraining in trainingToDelete.StrExercises)
-        {
-            foreach (var strParams in strExerciseInTraining.StrParams)
-            {
-                _dbContext.StrParams.Remove(strParams);
-            }
+        var training = await _dbContext.Trainings.FindAsync(trainingId)
+            ?? throw new KeyNotFoundException("Training not found");
 
-            _dbContext.StrExerciseInTrainings.Remove(strExerciseInTraining);
-        }
-        
-        foreach (var carExerciseInTraining in trainingToDelete.CarExercises)
+        if (training.User == GetCurrentUser())
         {
-            foreach (var carParams in carExerciseInTraining.CarParams)
-            {
-                _dbContext.CarParams.Remove(carParams);
-            }
-
-            _dbContext.CarExercisesInTrainings.Remove(carExerciseInTraining);
+            _dbContext.Trainings.Remove(training);
+            _dbContext.SaveChanges(); 
+            return training;
         }
-        
-        _dbContext.Trainings.Remove(trainingToDelete);
-        await _dbContext.SaveChangesAsync();
-        return trainingToDelete;
+
+        return null;
     }
     
     public async Task<List<Training>> GetTrainingsByStrExerciseId(int exerciseId)
