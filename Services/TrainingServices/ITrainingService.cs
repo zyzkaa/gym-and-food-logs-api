@@ -16,5 +16,6 @@ public interface ITrainingService
     public Task<List<CardioExercise>> GetCardioExercises();
     //public TrainingResponseDto GetTrainingDetails(int trainingId);
     public Task<List<StrengthExercise>> GetExercisesByMuscleId(int muscleId);
+    public Task<List<Training>> GetTrainingsByStrExerciseId(int exerciseId);
     //get training by exercise
 }
