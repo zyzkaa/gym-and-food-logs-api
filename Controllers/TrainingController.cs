@@ -51,36 +51,6 @@ public class TrainingController : ControllerBase
         return await _trainingService.GetTrainingsByDate(date);
     }
 
-    [HttpGet("get_strength_exercise/{id}")]
-    public async Task<StrengthExercise> GetStrExById(int id)
-    {
-       return await _trainingService.GetStrengthExerciseById(id);
-    }
-
-    [HttpGet("get_cardio_exercise/{id}")]
-    public async Task<CardioExercise> GetCarExById(int id)
-    {
-        return await _trainingService.GetCardioExerciseById(id);
-    }
-
-    [HttpGet("get_cardio_exercises")]
-    public async Task<List<CardioExercise>> GetCardioExercises()
-    {
-        return await _trainingService.GetCardioExercises();
-    }
-    
-    [HttpGet("get_strength_exercises")]
-    public async Task<List<StrengthExercise>> GetStrengthExercises()
-    {
-        return await _trainingService.GetStrengthExercises();
-    }
-
-    [HttpGet("get_exercises_by_muscle_id/{id}")]
-    public async Task<List<StrengthExercise>> GetExercisesByMuscleId(int id)
-    {
-        return await _trainingService.GetExercisesByMuscleId(id);
-    }
-
     [HttpGet("get_training_by_strength_exercise_id/{id}")]
     public async Task<List<Training>> GetTrainingsByStrengthExerciseId(int id)
     {

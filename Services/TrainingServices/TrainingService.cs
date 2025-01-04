@@ -176,43 +176,6 @@ public class TrainingService : ITrainingService
         return trainingToDelete;
     }
     
-    public async Task<StrengthExercise> GetStrengthExerciseById(int strExerciseId)
-    {
-        return await _dbContext.StrengthExercises
-            .Include(e => e.Muscles)
-            .FirstOrDefaultAsync(e => e.Id == strExerciseId)
-            ?? throw new KeyNotFoundException("Exercise not found");
-    }
-
-    public async Task<CardioExercise> GetCardioExerciseById(int carExerciseId)
-    {
-        return await _dbContext.CardioExercises
-            .FirstOrDefaultAsync(e => e.Id == carExerciseId) 
-               ?? throw new KeyNotFoundException("Exercise not found");
-    }
-
-    public Task<List<StrengthExercise>> GetStrengthExercises()
-    {
-        return _dbContext.StrengthExercises
-            .Include(e => e.Muscles)
-            .ToListAsync();
-    }
-
-    public Task<List<CardioExercise>> GetCardioExercises()
-    {
-        return _dbContext.CardioExercises.ToListAsync();
-    }
-    
-    public async Task<List<StrengthExercise>> GetExercisesByMuscleId(int muscleId)
-    {
-        var muscle = await _dbContext.Muscles.FindAsync(muscleId)
-            ?? throw new KeyNotFoundException("Muscle not found");
-        
-        return await _dbContext.StrengthExercises
-            .Where(e => e.Muscles.Any(m => m.Id == muscleId))
-            .ToListAsync();
-    }
-
     public async Task<List<Training>> GetTrainingsByStrExerciseId(int exerciseId)
     {
         var execise = await _dbContext.StrengthExercises.FindAsync(exerciseId)
