@@ -15,8 +15,9 @@ public class WebAppContext : DbContext
     public DbSet<StrParams> StrParams { get; set; }
     
     public DbSet<CardioExercise> CardioExercises { get; set; }
-    public DbSet<CarExerciseInTraining> CardioExercisesInTrainings { get; set; }
+    public DbSet<CarExerciseInTraining> CarExercisesInTrainings { get; set; }
     public DbSet<Met> Mets { get; set; }
+    public DbSet<CarParams> CarParams { get; set; }
     
     public DbSet<Product> Products { get; set; }
     public DbSet<Meal> Meals { get; set; }
@@ -34,6 +35,7 @@ public class WebAppContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
         
+        // strenth i cardio exercises in diffrent tables
         modelBuilder.Entity<StrengthExercise>()
             .ToTable("StrengthExercises")
             .HasBaseType((Type)null);
@@ -41,10 +43,27 @@ public class WebAppContext : DbContext
         modelBuilder.Entity<CardioExercise>()
             .ToTable("CardioExercises")
             .HasBaseType((Type)null);
-
         
-        // modelBuilder.Entity<StrengthExercise>()
-        //     .HasMany(e => e.Muscles)
-        //     .WithMany(e => e.StrengthExercises);
+        //cascade deleting on training
+        // modelBuilder.Entity<Training>()
+        //     .HasMany(t => t.StrExercises)
+        //     .WithOne()
+        //     .OnDelete(DeleteBehavior.Cascade);
+        //
+        // modelBuilder.Entity<Training>()
+        //     .HasMany(t => t.CarExercises)
+        //     .WithOne()
+        //     .OnDelete(DeleteBehavior.Cascade);
+        //
+        // modelBuilder.Entity<StrExerciseInTraining>()
+        //     .HasMany(e => e.StrParams)
+        //     .WithOne(p => p.StrExerciseInTraining)
+        //     .OnDelete(DeleteBehavior.Cascade);
+        //
+        // modelBuilder.Entity<CarExerciseInTraining>()
+        //     .HasMany(e => e.CarParams)
+        //     .WithOne(p => p.CarExerciseInTraining)
+        //     .OnDelete(DeleteBehavior.Cascade);
+        
     }
 }

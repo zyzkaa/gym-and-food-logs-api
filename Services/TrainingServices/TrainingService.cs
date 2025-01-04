@@ -83,7 +83,6 @@ public class TrainingService : ITrainingService
         Training training = ParseTrainingFromDto(trainingDto);
         await _dbContext.Trainings.AddAsync(training);
         await _dbContext.SaveChangesAsync();
-        
         return training;
     }
 
@@ -131,11 +130,49 @@ public class TrainingService : ITrainingService
             .ToListAsync();
     }
 
+    private IQueryable<Training> GetTrainingWithDetails()
+    {
+        return _dbContext.Trainings
+            .Include(t => t.CarExercises)
+            .ThenInclude(e => e.CarParams)
+            .Include(t => t.CarExercises)
+            .ThenInclude(e => e.CardioExercise)
+            .ThenInclude(e => e.Mets)
+            .Include(t => t.StrExercises)
+            .ThenInclude(e => e.StrParams)
+            .Include(t => t.StrExercises)
+            .ThenInclude(e => e.StrengthExercise)
+            .ThenInclude(e => e.Muscles);
+    }
+
     public async Task<Training> DeleteTrainingById(int trainingId)
     {
-        Training trainingToDelete = await _dbContext.Trainings.FindAsync(trainingId)
-            ?? throw new KeyNotFoundException("Training not found");
+        Training trainingToDelete = await GetTrainingWithDetails()
+                                        .FirstOrDefaultAsync(t => t.Id == trainingId) 
+                                    ?? throw new KeyNotFoundException("Training not found");
+        
+        foreach (var strExerciseInTraining in trainingToDelete.StrExercises)
+        {
+            foreach (var strParams in strExerciseInTraining.StrParams)
+            {
+                _dbContext.StrParams.Remove(strParams);
+            }
+
+            _dbContext.StrExerciseInTrainings.Remove(strExerciseInTraining);
+        }
+        
+        foreach (var carExerciseInTraining in trainingToDelete.CarExercises)
+        {
+            foreach (var carParams in carExerciseInTraining.CarParams)
+            {
+                _dbContext.CarParams.Remove(carParams);
+            }
+
+            _dbContext.CarExercisesInTrainings.Remove(carExerciseInTraining);
+        }
+        
         _dbContext.Trainings.Remove(trainingToDelete);
+        await _dbContext.SaveChangesAsync();
         return trainingToDelete;
     }
     
@@ -165,4 +202,5 @@ public class TrainingService : ITrainingService
     {
         return _dbContext.CardioExercises.ToListAsync();
     }
+    
 }
