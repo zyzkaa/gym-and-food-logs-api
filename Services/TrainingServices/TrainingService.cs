@@ -203,4 +203,14 @@ public class TrainingService : ITrainingService
         return _dbContext.CardioExercises.ToListAsync();
     }
     
+    public async Task<List<StrengthExercise>> GetExercisesByMuscleId(int muscleId)
+    {
+        var muscle = await _dbContext.Muscles.FindAsync(muscleId)
+            ?? throw new KeyNotFoundException("Muscle not found");
+        
+        return await _dbContext.StrengthExercises
+            .Where(e => e.Muscles.Any(m => m.Id == muscleId))
+            .ToListAsync();
+    }
+    
 }
