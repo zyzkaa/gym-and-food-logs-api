@@ -10,6 +10,4 @@ public class CarParams
     public TimeSpan Time { get; set; }
     [JsonIgnore]
     public CarExerciseInTraining CarExerciseInTraining { get; set; }
-    [JsonIgnore]
-    public int CarExerciseInTrainingId { get; set; }
 }

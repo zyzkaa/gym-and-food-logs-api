@@ -10,6 +10,4 @@ public class StrParams
     public int Repetitions { get; set; }
     [JsonIgnore]
     public StrExerciseInTraining StrExerciseInTraining { get; set; }
-    [JsonIgnore]
-    public int StrExerciseInTrainingId { get; set; }
 }

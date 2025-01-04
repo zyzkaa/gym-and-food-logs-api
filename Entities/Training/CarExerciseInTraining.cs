@@ -8,7 +8,5 @@ public class CarExerciseInTraining
     public CardioExercise CardioExercise { get; set; }
     public ICollection<CarParams> CarParams { get; set; } = new List<CarParams>();
     [JsonIgnore]
-    public int TrainingId { get; set; }  // Klucz obcy do Training
-    [JsonIgnore]
     public Training Training { get; set; }
 }

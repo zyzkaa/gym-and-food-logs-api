@@ -139,12 +139,12 @@ public class TrainingService : ITrainingService
         var training = await _dbContext.Trainings.FindAsync(trainingId)
             ?? throw new KeyNotFoundException("Training not found");
 
-        if (training.User == GetCurrentUser())
-        {
+        //if (training.User == GetCurrentUser())
+        //{
             _dbContext.Trainings.Remove(training);
             _dbContext.SaveChanges(); 
             return training;
-        }
+        //}
 
         return null;
     }

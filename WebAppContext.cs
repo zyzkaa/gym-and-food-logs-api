@@ -44,29 +44,31 @@ public class WebAppContext : DbContext
             .ToTable("CardioExercises")
             .HasBaseType((Type)null);
         
-        //cascade deleting on training
+        //cascade deleting when removing training
         modelBuilder.Entity<Training>()
             .HasMany(t => t.StrExercises)
             .WithOne(e => e.Training)
-            .HasForeignKey(e => e.TrainingId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Training>()
             .HasMany(t => t.CarExercises)
             .WithOne(e => e.Training)
-            .HasForeignKey(e => e.TrainingId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<StrExerciseInTraining>()
             .HasMany(e => e.StrParams)
             .WithOne(p => p.StrExerciseInTraining)
-            .HasForeignKey(p => p.StrExerciseInTrainingId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<CarExerciseInTraining>()
             .HasMany(e => e.CarParams)
             .WithOne(p => p.CarExerciseInTraining)
-            .HasForeignKey(p => p.CarExerciseInTrainingId)
+            .OnDelete(DeleteBehavior.Cascade);
+        
+        //cascade deleting when removing user
+        modelBuilder.Entity<User>()
+            .HasMany(u => u.Trainings)
+            .WithOne(t => t.User)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }
