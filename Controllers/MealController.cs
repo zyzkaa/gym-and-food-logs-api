@@ -21,13 +21,24 @@ public class MealController : ControllerBase
     public async Task<IActionResult> AddMeal([FromBody] MealDto mealDto)
     {
         var meal = await _mealService.AddMeal(mealDto);
-        return CreatedAtAction(nameof(GetMealById), new { id = meal.Id }, meal);
+         var mealDtoResponse = new MealDto
+            {
+                Id = meal.Id,
+                Name = meal.Name,
+                Ingredients = meal.Ingredients.Select(i => new MealIngredientDto
+                {
+                    ProductId = i.Product.Id,
+                    Quantity = i.Quantity
+                }).ToList()
+            };
+        return CreatedAtAction(nameof(GetMealById), new { id = mealDtoResponse.Id }, mealDtoResponse);
     }
 
     [HttpGet("get_all")]
     public async Task<IActionResult> GetMeals()
     {
         var meals = await _mealService.GetMeals();
+        
         return Ok(meals);
     }
 

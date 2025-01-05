@@ -18,13 +18,14 @@ public class MealService : IMealService
     {
         var meal = new Meal
         {
-            Name = mealDto.Name,
-            Ingredients = mealDto.Ingredients.Select(i => new MealIngredient
-            {
-                Quantity = i.Quantity,
-                Product = _dbContext.Products.FirstOrDefault(p => p.Id == i.Product.Id)
-            }).ToList()
+            Name = mealDto.Name
         };
+        meal.Ingredients = mealDto.Ingredients.Select(i => new MealIngredient
+        {
+            Quantity = i.Quantity,
+            Product = _dbContext.Products.FirstOrDefault(p => p.Id == i.ProductId),
+            Meal = meal,
+        }).ToList();
 
         await _dbContext.Meals.AddAsync(meal);
         await _dbContext.SaveChangesAsync();
