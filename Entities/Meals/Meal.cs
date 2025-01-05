@@ -10,9 +10,10 @@ public class Meal
 
     // Właściwość obliczana
     public double CalculatedCalories => Ingredients.Sum(ingredient => ingredient.TotalCalories);
-
     public double CalculatedProtein => Ingredients.Sum(ingredient => ingredient.TotalProtein);
     public double CalculatedCarbs => Ingredients.Sum(ingredient => ingredient.TotalCarbs);
     public double CalculatedFat => Ingredients.Sum(ingredient => ingredient.TotalFat);
 
+    // Relacja wiele-do-wielu
+    public ICollection<MealPlan> MealPlans { get; set; } = new List<MealPlan>();
 }

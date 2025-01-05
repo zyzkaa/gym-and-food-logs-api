@@ -3,7 +3,7 @@
 public class MealPlanDto
 {
     public int Id { get; set; }
-    public DateOnly Date { get; set; }
+    public DateTime Date { get; set; }
     public int UserId { get; set; }
-    public List<MealDto> Meals { get; set; } = new List<MealDto>();
+    public List<int> MealsID { get; set; }
 }

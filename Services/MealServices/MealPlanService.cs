@@ -16,20 +16,34 @@ public class MealPlanService : IMealPlanService
 
     public async Task<MealPlan> AddMealPlan(MealPlanDto mealPlanDto)
     {
-        var user = await _dbContext.Users.FindAsync(mealPlanDto.UserId)
-                   ?? throw new KeyNotFoundException("User not found");
+        // Pobranie użytkownika
+        var user = await _dbContext.Users.FindAsync(mealPlanDto.UserId);
+        if (user == null)
+            throw new KeyNotFoundException($"User with ID {mealPlanDto.UserId} not found");
 
+        // Pobranie posiłków w jednym zapytaniu
+        var meals = await _dbContext.Meals
+            .Where(m => mealPlanDto.MealsID.Contains(m.Id))
+            .ToListAsync();
+
+        if (meals.Count != mealPlanDto.MealsID.Count)
+            throw new KeyNotFoundException("One or more meals not found");
+
+        // Tworzenie MealPlan
         var mealPlan = new MealPlan
         {
-            Date = mealPlanDto.Date,
             User = user,
-            Meals = mealPlanDto.Meals.Select(m => _dbContext.Meals.Find(m.Id)).ToList()
+            Date = mealPlanDto.Date,
+            Meals = meals // Przypisanie posiłków
         };
 
+        // Dodanie MealPlan do bazy
         await _dbContext.MealPlans.AddAsync(mealPlan);
         await _dbContext.SaveChangesAsync();
+
         return mealPlan;
     }
+
 
     public async Task<List<MealPlan>> GetMealPlans()
     {

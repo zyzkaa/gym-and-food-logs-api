@@ -21,7 +21,8 @@ public class MealPlanController : ControllerBase
     public async Task<IActionResult> AddMealPlan([FromBody] MealPlanDto mealPlanDto)
     {
         var mealPlan = await _mealPlanService.AddMealPlan(mealPlanDto);
-        return CreatedAtAction(nameof(GetMealPlanById), new { id = mealPlan.Id }, mealPlan);
+        
+        return Ok(mealPlanDto);
     }
 
     [HttpGet("get_all")]
