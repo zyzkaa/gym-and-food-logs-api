@@ -29,6 +29,11 @@ public class TrainingService : ITrainingService
         return int.Parse(currentUserId);
     }
 
+    private bool CheckUser(Training training)
+    {
+        return training.User.Id == GetCurrentUserId() ? true : false;
+    }
+
     Training ParseTrainingFromDto(TrainingDto dto)
     {
         Training newTraining = new Training()
@@ -122,7 +127,7 @@ public class TrainingService : ITrainingService
         var training = await _dbContext.Trainings.FindAsync(trainingId)
             ?? throw new KeyNotFoundException("Training not found");
 
-        if (training.User.Id == GetCurrentUserId())
+        if (CheckUser(training))
         {
             _dbContext.Trainings.Remove(training);
             _dbContext.SaveChanges(); 
@@ -138,7 +143,7 @@ public class TrainingService : ITrainingService
                            .FirstOrDefaultAsync(t => t.Id == trainingId)
                        ?? throw new KeyNotFoundException("Training not found");
             
-        return training.User.Id == GetCurrentUserId() ? training : null;
+        return CheckUser(training) ? training : null;
     }
     
     public async Task<List<Training>> GetTrainingsByStrExerciseId(int exerciseId)
@@ -148,6 +153,7 @@ public class TrainingService : ITrainingService
         
         return await GetTrainingSummary()
             .Where(t => t.StrExercises.Any(e => e.StrengthExercise.Id == exerciseId))
+            .Where(t => t.User.Id == GetCurrentUserId())
             .ToListAsync();
     }
 
@@ -158,12 +164,14 @@ public class TrainingService : ITrainingService
         
         return await GetTrainingSummary()
             .Where(t => t.CarExercises.Any(e => e.CardioExercise.Id == exerciseId))
+            .Where(t => t.User.Id == GetCurrentUserId())
             .ToListAsync();
     }
     
     private IQueryable<Training> GetTrainingWithDetailsQuery()
     {
         return _dbContext.Trainings
+            .Include(t => t.User)
             .Include(t => t.CarExercises)
             .ThenInclude(e => e.CarParams)
             .Include(t => t.CarExercises)
@@ -245,12 +253,13 @@ public class TrainingService : ITrainingService
             .FirstOrDefaultAsync(t => t.Id == trainingId)
             ?? throw new KeyNotFoundException("Training not found");
         
-        return await ParseTrainingToDto(training);
+        return CheckUser(training) ? await ParseTrainingToDto(training) : null;
     }
 
     public async Task<List<Training>> GetTrainigsWithRecordsByStrengthExerciseId(int exerciseId)
     {
         return await _dbContext.Trainings
+            .Include(t => t.User)
             .Include(t => t.StrExercises.Where(e => e.StrengthExercise.Id == exerciseId))
                 .ThenInclude(e => e.StrParams)
             .Include(t => t.StrExercises)
