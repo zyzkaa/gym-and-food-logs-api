@@ -248,5 +248,15 @@ public class TrainingService : ITrainingService
         return await ParseTrainingToDto(training);
     }
 
-
+    public async Task<List<Training>> GetTrainigsWithRecordsByStrengthExerciseId(int exerciseId)
+    {
+        return await _dbContext.Trainings
+            .Include(t => t.StrExercises.Where(e => e.StrengthExercise.Id == exerciseId))
+                .ThenInclude(e => e.StrParams)
+            .Include(t => t.StrExercises)
+                .ThenInclude(e => e.StrengthExercise)
+            .Where(t => t.User.Id == GetCurrentUserId() && 
+                        t.StrExercises.Any(e => e.StrengthExercise.Id == exerciseId))
+            .ToListAsync();
+    }
 }

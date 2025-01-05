@@ -13,4 +13,5 @@ public interface ITrainingService
     public Task<TrainingResponseDto> GetTrainingWithDetails(int trainingId);
     public Task<List<Training>> GetTrainingsByStrExerciseId(int exerciseId);
     public Task<List<Training>> GetTrainingsByCarExerciseId(int exerciseId);
+    public Task<List<Training>> GetTrainigsWithRecordsByStrengthExerciseId(int exerciseId);
 }
