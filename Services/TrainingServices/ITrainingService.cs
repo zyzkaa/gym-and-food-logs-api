@@ -10,7 +10,7 @@ public interface ITrainingService
     public Task<Training> GetTrainingById(int trainingId);
     public Task<List<Training>> GetTrainingsByDate(DateOnly date);
     public Task<Training> DeleteTrainingById(int trainingId);
-    //public TrainingResponseDto GetTrainingDetails(int trainingId);
+    public Task<TrainingResponseDto> GetTrainingWithDetails(int trainingId);
     public Task<List<Training>> GetTrainingsByStrExerciseId(int exerciseId);
     public Task<List<Training>> GetTrainingsByCarExerciseId(int exerciseId);
 }
