@@ -34,44 +34,44 @@ public class TrainingController : ControllerBase
     }
 
     [HttpGet("get_all")]
-    public async Task<List<Training>> GetAllTrainings()
+    public async Task<IActionResult> GetAllTrainings()
     {
-        return await _trainingService.GetTrainings();
+        return Ok(await _trainingService.GetTrainings());
     }
     
     [HttpGet("get_by_id/{id}")] //????????????
-    public async Task<Training> GetTrainingById(int id)
+    public async Task<IActionResult> GetTrainingById(int id)
     {
-        return await _trainingService.GetTrainingById(id);
+        return Ok(await _trainingService.GetTrainingById(id));
     }
 
     [HttpGet("get_by_date/{date}")]
-    public async Task<List<Training>> GetTrainingsByDate(DateOnly date)
+    public async Task<IActionResult> GetTrainingsByDate(DateOnly date)
     {
-        return await _trainingService.GetTrainingsByDate(date);
+        return Ok(await _trainingService.GetTrainingsByDate(date));
     }
 
-    [HttpGet("get_training_by_strength_exercise_id/{id}")]
-    public async Task<List<Training>> GetTrainingsByStrExerciseId(int id)
+    [HttpGet("get_by_strength_exercise_id/{id}")]
+    public async Task<IActionResult> GetTrainingsByStrengthExerciseId(int id)
     {
-        return await _trainingService.GetTrainingsByStrExerciseId(id);
+        return Ok(await _trainingService.GetTrainingsByStrengthExerciseId(id));
     }
     
-    [HttpGet("get_training_by_cardio_exercise_id/{id}")]
-    public async Task<List<Training>> GetTrainingsByCarExerciseId(int id)
+    [HttpGet("get_by_cardio_exercise_id/{id}")]
+    public async Task<IActionResult> GetTrainingsByCarExerciseId(int id)
     {
-        return await _trainingService.GetTrainingsByCarExerciseId(id);
+        return Ok(await _trainingService.GetTrainingsByCardioExerciseId(id));
     }
 
-    [HttpGet("get_training_with_details/{id}")]
-    public async Task<TrainingResponseDto> GetTrainingsWithDetails(int id)
+    [HttpGet("get_with_details/{id}")]
+    public async Task<IActionResult> GetTrainingsWithDetails(int id)
     {
-        return await _trainingService.GetTrainingWithDetails(id);
+        return Ok(await _trainingService.GetTrainingWithDetails(id));
     }
 
-    [HttpGet("get_trainings_with_records_by_strength_exercise_id/{id}")]
-    public async Task<List<Training>> GetTrainingsWithRecordsByStrExerciseId(int id)
+    [HttpGet("get_with_records_by_strength_exercise_id/{id}")]
+    public async Task<IActionResult> GetTrainingsWithRecordsByStrExerciseId(int id)
     {
-        return await _trainingService.GetTrainigsWithRecordsByStrengthExerciseId(id);
+        return Ok(await _trainingService.GetTrainigsWithRecordsByStrengthExerciseId(id));
     }
 }

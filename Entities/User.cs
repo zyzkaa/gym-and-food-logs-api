@@ -33,7 +33,7 @@ public class User
     public int Age { get; set; }
     
     [SwaggerSchema(ReadOnly = true)]
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
     
     [SwaggerSchema(ReadOnly = true)]
     public DateTime? ModifiedAt { get; set; }

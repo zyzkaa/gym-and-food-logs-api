@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApp;
 using Microsoft.AspNetCore.Identity;
 using WebApp.Entities;
+using WebApp.Services.ExerciseServices;
 using WebApp.Services.TrainingServices;
 using WebApp.Services.UsersServices;
 
@@ -27,6 +28,7 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddDbContext<WebAppContext>();
 builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<ITrainingService, TrainingService>();
+builder.Services.AddScoped<IExerciseService, ExerciseService>();
 builder.Services.AddControllers();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>

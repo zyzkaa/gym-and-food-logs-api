@@ -16,16 +16,16 @@ public class ExerciseController : ControllerBase
     public ExerciseController(IExerciseService exerciseService)
     {
         _exerciseService = exerciseService;
-    }
+    }     
     
     [HttpGet("get_strength_exercise/{id}")]
-    public async Task<StrengthExercise> GetStrExById(int id)
+    public async Task<StrengthExercise> GetStrengthExerciseById(int id)
     {
         return await _exerciseService.GetStrengthExerciseById(id);
     }
 
     [HttpGet("get_cardio_exercise/{id}")]
-    public async Task<CardioExercise> GetCarExById(int id)
+    public async Task<CardioExercise> GetCardioExerciseById(int id)
     {
         return await _exerciseService.GetCardioExerciseById(id);
     }

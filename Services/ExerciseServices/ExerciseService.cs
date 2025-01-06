@@ -16,7 +16,7 @@ public class ExerciseService : IExerciseService
     {
         return await _dbContext.StrengthExercises
                    .Include(e => e.Muscles)
-                   .FirstOrDefaultAsync(e => e.Id == strExerciseId)
+                   .FirstAsync(e => e.Id == strExerciseId)
                ?? throw new KeyNotFoundException("Exercise not found");
     }
 
