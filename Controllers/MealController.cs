@@ -42,6 +42,14 @@ public class MealController : ControllerBase
         return Ok(mealDtoResponse);
     }
 
+    [HttpGet("get_by_product/{id}")]
+    public async Task<IActionResult> GetMealsByProduct(int id)
+    {
+        var meals = await _mealService.GetMealByProductId(id);
+        var mealsDtoResposne = meals.Select(m => MealUtillity.ParseToMealDto(m));
+        return Ok(mealsDtoResposne);
+    }
+
     [HttpDelete("delete/{id}")]
     public async Task<IActionResult> DeleteMealById(int id)
     {

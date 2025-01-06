@@ -49,6 +49,14 @@ public class MealService : IMealService
                ?? throw new KeyNotFoundException("Meal not found");
     }
 
+    public async Task<List<Meal>> GetMealByProductId(int productId)
+    {
+        return await _dbContext.Meals
+            .Include(m => m.Ingredients)
+            .ThenInclude(I => I.Product)
+            .Where(m => m.Ingredients.Any(i => i.Product.Id == productId))
+            .ToListAsync();
+    }
     public async Task<Meal> DeleteMealById(int mealId)
     {
         var meal = await _dbContext.Meals.FindAsync(mealId)
