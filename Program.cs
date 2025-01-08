@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApp;
 using Microsoft.AspNetCore.Identity;
 using WebApp.Entities;
-using WebApp.Services.ExerciseServices
+using WebApp.Services.ExerciseServices;
 using WebApp.Services.MealPlanServices;
 using WebApp.Services.MealServices;
 using WebApp.Services.TrainingServices;
