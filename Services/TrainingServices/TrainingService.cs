@@ -23,6 +23,17 @@ public class TrainingService : ITrainingService
         return currnetUser;
     }
 
+    private int GetCurrentUserId()
+    {
+        string currentUserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        return int.Parse(currentUserId);
+    }
+
+    private bool CheckUser(Training training)
+    {
+        return training.User.Id == GetCurrentUserId() ? true : false;
+    }
+
     Training ParseTrainingFromDto(TrainingDto dto)
     {
         Training newTraining = new Training()
@@ -35,134 +46,228 @@ public class TrainingService : ITrainingService
         
         foreach (var strExerciseInTraining in dto.StrExercisesDto)
         {
-            StrExerciseInTraining newStrEx = new StrExerciseInTraining()
+            StrengthExerciseInTraining newStrEx = new StrengthExerciseInTraining()
             {
                 StrengthExercise = _dbContext.StrengthExercises.Find(strExerciseInTraining.ExerciseId),
+                Params = new List<StrengthExerciseParams>()
             };
             
             foreach (var strParams in strExerciseInTraining.StrParams)
             { 
-                var newParams = new StrParams()
+                var newParams = new StrengthExerciseParams()
                 {
-                    Set = strParams.set,
-                    Weight = strParams.weight,
-                    Repetitions = strParams.repetitions
+                    Set = strParams.Set,
+                    Weight = strParams.Weight,
+                    Repetitions = strParams.Repetitions
                 };
-                newStrEx.StrParams.Add(newParams);
+                newStrEx.Params.Add(newParams);
             }
             
-            newTraining.StrExercises.Add(newStrEx);
+            newTraining.StrengthExercises.Add(newStrEx);
         }
         
         foreach (var carExerciseInTraining in dto.CarExercisesDto)
         {
-            CarExerciseInTraining newCarEx = new CarExerciseInTraining()
+            CardioExerciseInTraining newCarEx = new CardioExerciseInTraining()
             {
-                CardioExercise = _dbContext.CardioExercises.Find(carExerciseInTraining.ExerciseId)
+                CardioExercise = _dbContext.CardioExercises.Find(carExerciseInTraining.ExerciseId),
+                Params = new List<CardioExerciseParams>()
             };
 
             foreach (var carParams in carExerciseInTraining.CarParams)
             {
-                var newParams = new CarParams()
+                var newParams = new CardioExerciseParams()
                 {
-                    Inteval = carParams.interval,
-                    Speed = carParams.speed,
-                    Time = carParams.time
+                    Inteval = carParams.Interval,
+                    Speed = carParams.Speed,
+                    Time = carParams.Time
                 };
-                newCarEx.CarParams.Add(newParams);
+                newCarEx.Params.Add(newParams);
             }
             
-            newTraining.CarExercises.Add(newCarEx);
+            newTraining.CardioExercises.Add(newCarEx);
         }
 
         return newTraining;
     }
+    
+    private async Task<TrainingResponseDto> ParseTrainingToDetailedDto(Training training)
+    {
+        var trainingResponse = new TrainingResponseDto()
+        {
+            Id = training.Id,
+            Name = training.Name,
+            Duration = training.Duration
+        };
+
+        foreach (var strExerciseInTraining in training.StrengthExercises)
+        {
+            var paramsList = new List<TrainingResponseDto.StrParamsResponseDto>();
+            double volume = 0;
+            
+            foreach (var strParams in strExerciseInTraining.Params)
+            {
+                var newParams = new TrainingResponseDto.StrParamsResponseDto(strParams.Set, strParams.Weight,
+                    strParams.Repetitions, strParams.Weight * strParams.Repetitions);
+                
+                paramsList.Add(newParams);
+                volume += newParams.Volume;
+            }
+
+            var newExercise = new TrainingResponseDto.StrengthExerciseResponseDto(
+                strExerciseInTraining.StrengthExercise, paramsList, volume);
+            
+            trainingResponse.StrExercisesResponseDto.Add(newExercise);
+        }
         
-    public async Task<Training> AddTraining(TrainingDto trainingDto)
+        double totalCalories = 0;
+        foreach (var carExerciseInTraining in training.CardioExercises)
+        {
+            var paramsList = new List<TrainingResponseDto.CarParamsResponseDto>();
+            double caloriesInExercise = 0;
+            
+            foreach (var carParams in carExerciseInTraining.Params)
+            {
+                var timeInHours = carParams.Time.TotalHours;
+                var met = await _dbContext.Mets
+                    .Where(m => m.cardioExercise == carExerciseInTraining.CardioExercise)
+                    .Where(m => m.StartSpeed <= carParams.Speed)
+                    .OrderByDescending(m => m.StartSpeed)
+                    .FirstAsync();
+                var calories = carParams.Speed * timeInHours * GetCurrentUser().Weight;
+
+                var newParams = new TrainingResponseDto.CarParamsResponseDto(carParams.Inteval, 
+                    carParams.Speed, carParams.Time, calories);
+                
+                paramsList.Add(newParams);
+                caloriesInExercise += calories;
+            }
+            
+            var newExercise = new TrainingResponseDto.CarExerciseResponseDto(carExerciseInTraining.CardioExercise,
+                paramsList, caloriesInExercise);
+            totalCalories += caloriesInExercise;
+            trainingResponse.CarExercisesResponseDto.Add(newExercise);
+        }
+        
+        trainingResponse.TotalCalories = totalCalories;
+
+        return trainingResponse;
+    }
+        
+    public async Task<TrainingResponseDto> AddTraining(TrainingDto trainingDto)
     {
         Training training = ParseTrainingFromDto(trainingDto);
         await _dbContext.Trainings.AddAsync(training);
         await _dbContext.SaveChangesAsync();
-        
-        return training;
+        return await ParseTrainingToDetailedDto(training);
     }
 
     private IQueryable<Training> GetTrainingSummary()
     {
         return _dbContext.Trainings
-            .Include(t => t.StrExercises)
+            .Include(t => t.User)
+            .Include(t => t.StrengthExercises)
             .ThenInclude(e => e.StrengthExercise)
-            .Include(t => t.CarExercises)
+            .Include(t => t.CardioExercises)
             .ThenInclude(e => e.CardioExercise);
     }
 
     public Task<List<Training>> GetTrainings()
     {
         return GetTrainingSummary()
-            .Where(t => t.User == GetCurrentUser())
+            .Where(t => t.User.Id == GetCurrentUserId())
             .ToListAsync();
-    }
-
-    public async Task<Training> GetTrainingById(int trainingId)
-    {
-        // var training = await _dbContext.Trainings.FindAsync(trainingId);
-        // return training.User == getCurrentUser() ? training : null;
-        // return await _dbContext.Trainings
-        //     .Include(t => t.StrExercises)
-        //         .ThenInclude(e => e.StrengthExercise)
-        //     .Include(t => t.StrExercises)
-        //         .ThenInclude(e => e.StrParams)
-        //     .Include(t => t.CarExercises)
-        //         .ThenInclude(e => e.CardioExercise)
-        //     .Include(t => t.CarExercises)
-        //         .ThenInclude(e => e.CarParams)
-        //     .FirstOrDefaultAsync(t => t.Id == trainingId);
-
-        return await GetTrainingSummary()
-            .FirstOrDefaultAsync(t => t.Id == trainingId)
-            ?? throw new KeyNotFoundException("Training not found");
     }
 
     public async Task<List<Training>> GetTrainingsByDate(DateOnly date)
     {
         return await GetTrainingSummary()
             .Where(t => t.Date == date)
-            .Where(t => t.User == GetCurrentUser())
+            .Where(t => t.User.Id == GetCurrentUserId())
             .ToListAsync();
     }
 
     public async Task<Training> DeleteTrainingById(int trainingId)
     {
-        Training trainingToDelete = await _dbContext.Trainings.FindAsync(trainingId)
+        var training = await _dbContext.Trainings.FindAsync(trainingId)
             ?? throw new KeyNotFoundException("Training not found");
-        _dbContext.Trainings.Remove(trainingToDelete);
-        return trainingToDelete;
+
+        if (CheckUser(training))
+        {
+            _dbContext.Trainings.Remove(training);
+            _dbContext.SaveChanges(); 
+            return training;
+        }
+
+        return null;
     }
     
-    public async Task<StrengthExercise> GetStrengthExerciseById(int strExerciseId)
+    public async Task<Training> GetTrainingById(int trainingId)
     {
-        return await _dbContext.StrengthExercises
-            .Include(e => e.Muscles)
-            .FirstOrDefaultAsync(e => e.Id == strExerciseId)
+        var training = await GetTrainingSummary()
+                           .FirstOrDefaultAsync(t => t.Id == trainingId)
+                       ?? throw new KeyNotFoundException("Training not found");
+            
+        return CheckUser(training) ? training : null;
+    }
+    
+    public async Task<List<Training>> GetTrainingsByStrengthExerciseId(int exerciseId)
+    {
+        var execise = await _dbContext.StrengthExercises.FindAsync(exerciseId)
             ?? throw new KeyNotFoundException("Exercise not found");
-    }
-
-    public async Task<CardioExercise> GetCardioExerciseById(int carExerciseId)
-    {
-        return await _dbContext.CardioExercises
-            .FirstOrDefaultAsync(e => e.Id == carExerciseId) 
-               ?? throw new KeyNotFoundException("Exercise not found");
-    }
-
-    public Task<List<StrengthExercise>> GetStrengthExercises()
-    {
-        return _dbContext.StrengthExercises
-            .Include(e => e.Muscles)
+        
+        return await GetTrainingSummary()
+            .Where(t => t.StrengthExercises.Any(e => e.StrengthExercise.Id == exerciseId))
+            .Where(t => t.User.Id == GetCurrentUserId())
             .ToListAsync();
     }
 
-    public Task<List<CardioExercise>> GetCardioExercises()
+    public async Task<List<Training>> GetTrainingsByCardioExerciseId(int exerciseId)
     {
-        return _dbContext.CardioExercises.ToListAsync();
+        var execise = await _dbContext.CardioExercises.FindAsync(exerciseId)
+                      ?? throw new KeyNotFoundException("Exercise not found");
+        
+        return await GetTrainingSummary()
+            .Where(t => t.CardioExercises.Any(e => e.CardioExercise.Id == exerciseId))
+            .Where(t => t.User.Id == GetCurrentUserId())
+            .ToListAsync();
+    }
+    
+    private IQueryable<Training> GetTrainingWithDetailsQuery()
+    {
+        return _dbContext.Trainings
+            .Include(t => t.User)
+            .Include(t => t.CardioExercises)
+            .ThenInclude(e => e.Params)
+            .Include(t => t.CardioExercises)
+            .ThenInclude(e => e.CardioExercise)
+            .ThenInclude(e => e.Mets)
+            .Include(t => t.StrengthExercises)
+            .ThenInclude(e => e.Params)
+            .Include(t => t.StrengthExercises)
+            .ThenInclude(e => e.StrengthExercise)
+            .ThenInclude(e => e.Muscles);
+    }
+
+    public async Task<TrainingResponseDto> GetTrainingWithDetails(int trainingId)
+    {
+        var training = await GetTrainingWithDetailsQuery()
+            .FirstOrDefaultAsync(t => t.Id == trainingId)
+            ?? throw new KeyNotFoundException("Training not found");
+        
+        return CheckUser(training) ? await ParseTrainingToDetailedDto(training) : null;
+    }
+
+    public async Task<List<Training>> GetTrainigsWithRecordsByStrengthExerciseId(int exerciseId)
+    {
+        return await _dbContext.Trainings
+            .Include(t => t.User)
+            .Include(t => t.StrengthExercises.Where(e => e.StrengthExercise.Id == exerciseId))
+                .ThenInclude(e => e.Params)
+            .Include(t => t.StrengthExercises)
+                .ThenInclude(e => e.StrengthExercise)
+            .Where(t => t.User.Id == GetCurrentUserId() && 
+                        t.StrengthExercises.Any(e => e.StrengthExercise.Id == exerciseId))
+            .ToListAsync();
     }
 }

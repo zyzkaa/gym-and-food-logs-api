@@ -10,8 +10,8 @@ public class Training
     public string Name { get; set; }
     public DateOnly Date { get; set; }
     public TimeSpan? Duration { get; set; } = TimeSpan.Zero;
-    public ICollection<StrExerciseInTraining> StrExercises { get; set; } = new List<StrExerciseInTraining>();
-    public ICollection<CarExerciseInTraining> CarExercises { get; set; } = new List<CarExerciseInTraining>();
+    public ICollection<StrengthExerciseInTraining> StrengthExercises { get; set; } = new List<StrengthExerciseInTraining>();
+    public ICollection<CardioExerciseInTraining> CardioExercises { get; set; } = new List<CardioExerciseInTraining>();
     [JsonIgnore]
     public User User { get; set; }
 }   
