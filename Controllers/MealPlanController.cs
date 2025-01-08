@@ -3,6 +3,7 @@ using WebApp.DTO;
 using WebApp.DTO.Meals;
 using WebApp.Entities;
 using WebApp.Services.MealPlanServices;
+using WebApp.Utill.Meals;
 
 namespace WebApp.Controllers;
 
@@ -21,21 +22,26 @@ public class MealPlanController : ControllerBase
     public async Task<IActionResult> AddMealPlan([FromBody] MealPlanDto mealPlanDto)
     {
         var mealPlan = await _mealPlanService.AddMealPlan(mealPlanDto);
-        return CreatedAtAction(nameof(GetMealPlanById), new { id = mealPlan.Id }, mealPlan);
+        
+        return Ok(mealPlanDto);
     }
 
     [HttpGet("get_all")]
     public async Task<IActionResult> GetMealPlans()
     {
         var mealPlans = await _mealPlanService.GetMealPlans();
-        return Ok(mealPlans);
+
+        var mealPlanfullMealDto = mealPlans.Select(mp => MealPlanUtillity.ParseFullMealPlan(mp)).ToList();
+        return Ok(mealPlanfullMealDto);
     }
+
 
     [HttpGet("get_by_id/{id}")]
     public async Task<IActionResult> GetMealPlanById(int id)
     {
         var mealPlan = await _mealPlanService.GetMealPlanById(id);
-        return Ok(mealPlan);
+        var mealPlanfullMealDto = MealPlanUtillity.ParseFullMealPlan(mealPlan);
+        return Ok(mealPlanfullMealDto);
     }
 
     [HttpDelete("delete/{id}")]

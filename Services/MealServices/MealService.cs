@@ -18,13 +18,14 @@ public class MealService : IMealService
     {
         var meal = new Meal
         {
-            Name = mealDto.Name,
-            Ingredients = mealDto.Ingredients.Select(i => new MealIngredient
-            {
-                Quantity = i.Quantity,
-                Product = _dbContext.Products.FirstOrDefault(p => p.Id == i.Product.Id)
-            }).ToList()
+            Name = mealDto.Name
         };
+        meal.Ingredients = mealDto.Ingredients.Select(i => new MealIngredient
+        {
+            Quantity = i.Quantity,
+            Product = _dbContext.Products.FirstOrDefault(p => p.Id == i.ProductId),
+            Meal = meal,
+        }).ToList();
 
         await _dbContext.Meals.AddAsync(meal);
         await _dbContext.SaveChangesAsync();
@@ -48,6 +49,14 @@ public class MealService : IMealService
                ?? throw new KeyNotFoundException("Meal not found");
     }
 
+    public async Task<List<Meal>> GetMealByProductId(int productId)
+    {
+        return await _dbContext.Meals
+            .Include(m => m.Ingredients)
+            .ThenInclude(I => I.Product)
+            .Where(m => m.Ingredients.Any(i => i.Product.Id == productId))
+            .ToListAsync();
+    }
     public async Task<Meal> DeleteMealById(int mealId)
     {
         var meal = await _dbContext.Meals.FindAsync(mealId)

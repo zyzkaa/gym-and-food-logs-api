@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 using WebApp.DTO;
 using WebApp.DTO.Meals;
 using WebApp.Entities;
@@ -8,28 +9,58 @@ namespace WebApp.Services.MealPlanServices;
 public class MealPlanService : IMealPlanService
 {
     private readonly WebAppContext _dbContext;
+    private readonly IHttpContextAccessor _httpContentAccessor;
 
-    public MealPlanService(WebAppContext dbContext)
+    public MealPlanService(WebAppContext dbContext, IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
+        _httpContentAccessor = httpContextAccessor;
     }
+    
 
     public async Task<MealPlan> AddMealPlan(MealPlanDto mealPlanDto)
     {
-        var user = await _dbContext.Users.FindAsync(mealPlanDto.UserId)
-                   ?? throw new KeyNotFoundException("User not found");
+        // Pobranie ID zalogowanego użytkownika z kontekstu
+        var userIdClaim = _httpContentAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+        if (userIdClaim == null)
+            throw new UnauthorizedAccessException("User is not authenticated");
 
+        int userId = int.Parse(userIdClaim.Value);
+
+        // Pobranie użytkownika z bazy
+        var user = await _dbContext.Users
+            .Include(u => u.MealPlans) // Załaduj istniejące MealPlans
+            .FirstOrDefaultAsync(u => u.Id == userId);
+
+        if (user == null)
+            throw new KeyNotFoundException($"User with ID {userId} not found");
+
+        // Pobranie posiłków w jednym zapytaniu
+        var meals = await _dbContext.Meals
+            .Where(m => mealPlanDto.MealsID.Contains(m.Id))
+            .ToListAsync();
+
+        if (meals.Count != mealPlanDto.MealsID.Count)
+            throw new KeyNotFoundException("One or more meals not found");
+
+        // Tworzenie MealPlan
         var mealPlan = new MealPlan
         {
-            Date = mealPlanDto.Date,
             User = user,
-            Meals = mealPlanDto.Meals.Select(m => _dbContext.Meals.Find(m.Id)).ToList()
+            Date = mealPlanDto.Date,
+            Meals = meals // Przypisanie posiłków
         };
 
+        // Dodanie MealPlan do kolekcji użytkownika
+        user.MealPlans.Add(mealPlan);
+
+        // Dodanie MealPlan do bazy
         await _dbContext.MealPlans.AddAsync(mealPlan);
         await _dbContext.SaveChangesAsync();
         return mealPlan;
     }
+
+
 
     public async Task<List<MealPlan>> GetMealPlans()
     {
