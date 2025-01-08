@@ -445,3 +445,4 @@ D:/studia/5sem/dotNet/projekt/WebApp/obj/Debug/net9.0/ref/WebApp.dll
 /home/zyzka/RiderProjects/gymLogsApi/obj/Debug/net9.0/WebApp.genruntimeconfig.cache
 /home/zyzka/RiderProjects/gymLogsApi/obj/Debug/net9.0/ref/WebApp.dll
 /home/zyzka/RiderProjects/gymLogsApi/bin/Debug/net9.0/Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+/home/zyzka/RiderProjects/gymLogsApi/bin/Debug/net9.0/Swashbuckle.AspNetCore.Annotations.dll

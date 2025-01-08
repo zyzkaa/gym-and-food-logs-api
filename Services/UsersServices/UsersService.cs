@@ -79,16 +79,6 @@ public class UsersService : IUsersService
     
     public UserResponseDto RegisterUser(User newUser)
     {
-        // var newUser = new User()
-        // {
-        //     Username = newUserDto.Username,
-        //     Password = newUserDto.Password,
-        //     Weight = newUserDto.Weight,
-        //     Height = newUserDto.Height,
-        //     Age = newUserDto.Age,
-        //     CreatedAt = DateTime.Now
-        // };
-        
         _dbContext.Users.Add(newUser);
         _dbContext.SaveChanges();
 
