@@ -9,6 +9,6 @@ public interface IUsersService
     UserResponseDto RegisterUser(User newUser);
     Task<UserResponseDto> LoginUser(LoginUserDto loginUserDto);
     Task<UserResponseDto> LogoutUser();
-    User GetUser();
+    GetUserResponseDto GetUser();
     Task<UserResponseDto> ChangeUserParameters(UserParametersDto userParametersDto);
 }
