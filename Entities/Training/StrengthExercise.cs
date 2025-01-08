@@ -1,8 +1,10 @@
-﻿using Swashbuckle.AspNetCore.Annotations;
+﻿using System.Text.Json.Serialization;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace WebApp.Entities;
 
 public class StrengthExercise : Exercise
 {
-    public ICollection<Muscle> Muscles { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public ICollection<Muscle>? Muscles { get; set; }
 }

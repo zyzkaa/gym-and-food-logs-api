@@ -11,13 +11,13 @@ public class WebAppContext : DbContext
 
     public DbSet<StrengthExercise> StrengthExercises { get; set; }
     public DbSet<Muscle> Muscles { get; set; }
-    public DbSet<StrExerciseInTraining> StrExerciseInTrainings { get; set; }
-    public DbSet<StrParams> StrParams { get; set; }
+    public DbSet<StrengthExerciseInTraining> StrExerciseInTrainings { get; set; }
+    public DbSet<StrengthExerciseParams> StrParams { get; set; }
     
     public DbSet<CardioExercise> CardioExercises { get; set; }
-    public DbSet<CarExerciseInTraining> CarExercisesInTrainings { get; set; }
+    public DbSet<CardioExerciseInTraining> CarExercisesInTrainings { get; set; }
     public DbSet<Met> Mets { get; set; }
-    public DbSet<CarParams> CarParams { get; set; }
+    public DbSet<CardioExerciseParams> CarParams { get; set; }
     
     public DbSet<Product> Products { get; set; }
     public DbSet<Meal> Meals { get; set; }
@@ -44,26 +44,31 @@ public class WebAppContext : DbContext
             .ToTable("CardioExercises")
             .HasBaseType((Type)null);
         
-        //cascade deleting on training
-        // modelBuilder.Entity<Training>()
-        //     .HasMany(t => t.StrExercises)
-        //     .WithOne()
-        //     .OnDelete(DeleteBehavior.Cascade);
-        //
-        // modelBuilder.Entity<Training>()
-        //     .HasMany(t => t.CarExercises)
-        //     .WithOne()
-        //     .OnDelete(DeleteBehavior.Cascade);
-        //
-        // modelBuilder.Entity<StrExerciseInTraining>()
-        //     .HasMany(e => e.StrParams)
-        //     .WithOne(p => p.StrExerciseInTraining)
-        //     .OnDelete(DeleteBehavior.Cascade);
-        //
-        // modelBuilder.Entity<CarExerciseInTraining>()
-        //     .HasMany(e => e.CarParams)
-        //     .WithOne(p => p.CarExerciseInTraining)
-        //     .OnDelete(DeleteBehavior.Cascade);
+        //cascade deleting when removing training
+        modelBuilder.Entity<Training>()
+            .HasMany(t => t.StrengthExercises)
+            .WithOne(e => e.Training)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Training>()
+            .HasMany(t => t.CardioExercises)
+            .WithOne(e => e.Training)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<StrengthExerciseInTraining>()
+            .HasMany(e => e.Params)
+            .WithOne(p => p.StrengthExerciseInTraining)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<CardioExerciseInTraining>()
+            .HasMany(e => e.Params)
+            .WithOne(p => p.CardioExerciseInTraining)
+            .OnDelete(DeleteBehavior.Cascade);
         
+        //cascade deleting when removing user
+        modelBuilder.Entity<User>()
+            .HasMany(u => u.Trainings)
+            .WithOne(t => t.User)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

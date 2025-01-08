@@ -94,6 +94,7 @@ public class UsersService : IUsersService
         user.Age = userParametersDto.Age;
         user.Height = userParametersDto.Height;
         user.Weight = userParametersDto.Weight;
+        user.ModifiedAt = DateTime.Now;
         await _dbContext.SaveChangesAsync();
         
         return ParseUserToDto(user);
