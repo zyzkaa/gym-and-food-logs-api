@@ -24,13 +24,16 @@ public class UsersService : IUsersService
     {
         var user = _dbContext.Users
             .Include(u => u.Trainings) 
-            .ThenInclude(t => t.StrExercises) 
+            .ThenInclude(t => t.StrengthExercises) 
             .ThenInclude(e => e.StrengthExercise)
             .Include(u => u.Trainings) 
-            .ThenInclude(t => t.CarExercises) 
+            .ThenInclude(t => t.CardioExercises) 
             .ThenInclude(e=>e.CardioExercise)
             .Include(u => u.MealPlans) 
             .ThenInclude(mp => mp.Meals).FirstOrDefault(u => u.Id == int.Parse(_httpContentAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value));
+        
+
+            
         
         var userDto = new GetUserResponseDto()
         {
@@ -41,13 +44,13 @@ public class UsersService : IUsersService
             Age = user.Age,
             CreatedAt = user.CreatedAt,
             ModifiedAt = user.ModifiedAt,
-            Trainings = user.Trainings?.GroupBy(t => t.StrExercises.Any() ? "strength" : "cardio")
+            Trainings = user.Trainings?.GroupBy(t => t.StrengthExercises.Any() ? "strength" : "cardio")
                 .ToDictionary(
                     group => group.Key,
                     group => group.SelectMany(t =>
                         group.Key == "strength"
-                            ? t.StrExercises.Select(se => $"name: {se.StrengthExercise.Name}")
-                            : t.CarExercises.Select(ce => $"name: {ce.CardioExercise.Name}")
+                            ? t.StrengthExercises.Select(se => $"name: {se.StrengthExercise.Name}")
+                            : t.CardioExercises.Select(ce => $"name: {ce.CardioExercise.Name}")
                     ).ToArray()
                 ),
             MealPlans = user.MealPlans?.Select(mp =>
