@@ -20,9 +20,41 @@ public class UsersService : IUsersService
         _httpContentAccessor = httpContextAccessor;
     }
 
-    public User GetUser()
+    public GetUserResponseDto GetUser()
     {
-        return _dbContext.Users.FirstOrDefault(u => u.Id == int.Parse(_httpContentAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value));
+        var user = _dbContext.Users
+            .Include(u => u.Trainings) 
+            .ThenInclude(t => t.StrExercises) 
+            .ThenInclude(e => e.StrengthExercise)
+            .Include(u => u.Trainings) 
+            .ThenInclude(t => t.CarExercises) 
+            .ThenInclude(e=>e.CardioExercise)
+            .Include(u => u.MealPlans) 
+            .ThenInclude(mp => mp.Meals).FirstOrDefault(u => u.Id == int.Parse(_httpContentAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value));
+        
+        var userDto = new GetUserResponseDto()
+        {
+            Id = user.Id,
+            Password = user.Password,
+            Username = user.Username,
+            Weight = user.Weight,
+            Age = user.Age,
+            CreatedAt = user.CreatedAt,
+            ModifiedAt = user.ModifiedAt,
+            Trainings = user.Trainings?.GroupBy(t => t.StrExercises.Any() ? "strength" : "cardio")
+                .ToDictionary(
+                    group => group.Key,
+                    group => group.SelectMany(t =>
+                        group.Key == "strength"
+                            ? t.StrExercises.Select(se => $"name: {se.StrengthExercise.Name}")
+                            : t.CarExercises.Select(ce => $"name: {ce.CardioExercise.Name}")
+                    ).ToArray()
+                ),
+            MealPlans = user.MealPlans?.Select(mp =>
+                mp.Meals.Select(m => $"{m.Name} (calories: {m.CalculatedCalories})").ToArray()
+            ).ToList()
+        };
+        return userDto;
     }
 
     private UserResponseDto ParseUserToDto(User user)
