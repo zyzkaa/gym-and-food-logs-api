@@ -90,6 +90,7 @@ public class UsersService : IUsersService
 
     public async Task<UserResponseDto> LoginUser(LoginUserDto loginUserDto)
     {
+        if(_httpContentAccessor.HttpContext.User.Identity.IsAuthenticated) _httpContentAccessor.HttpContext.SignOutAsync();
         var user = _dbContext.Users.FirstOrDefault(u => u.Username == loginUserDto.Username);
         
         if (user == null)
@@ -114,6 +115,7 @@ public class UsersService : IUsersService
 
     }
 
+    
     public async Task<UserResponseDto> LogoutUser()
     {
         var currentUserId = _httpContentAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
