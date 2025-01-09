@@ -51,6 +51,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     public IActionResult GetUser()
     {
         return Ok(_usersService.GetUser());

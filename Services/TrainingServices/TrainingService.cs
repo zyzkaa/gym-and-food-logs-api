@@ -31,7 +31,7 @@ public class TrainingService : ITrainingService
 
     private bool CheckUser(Training training)
     {
-        return training.User.Id == GetCurrentUserId() ? true : false;
+        return training.User.Id == GetCurrentUserId();
     }
 
     Training ParseTrainingFromDto(TrainingDto dto)
@@ -189,7 +189,10 @@ public class TrainingService : ITrainingService
 
     public async Task<Training> DeleteTrainingById(int trainingId)
     {
-        var training = await _dbContext.Trainings.FindAsync(trainingId)
+        var training = await _dbContext.Trainings
+                           .Include(t => t.User)
+                           .Where(t => t.Id == trainingId)
+                           .FirstAsync()
             ?? throw new KeyNotFoundException("Training not found");
 
         if (CheckUser(training))
