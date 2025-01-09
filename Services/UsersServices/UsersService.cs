@@ -32,9 +32,6 @@ public class UsersService : IUsersService
             .Include(u => u.MealPlans) 
             .ThenInclude(mp => mp.Meals).FirstOrDefault(u => u.Id == int.Parse(_httpContentAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value));
         
-
-            
-        
         var userDto = new GetUserResponseDto()
         {
             Id = user.Id,
@@ -44,15 +41,28 @@ public class UsersService : IUsersService
             Age = user.Age,
             CreatedAt = user.CreatedAt,
             ModifiedAt = user.ModifiedAt,
-            Trainings = user.Trainings?.GroupBy(t => t.StrengthExercises.Any() ? "strength" : "cardio")
+            // Trainings = user.Trainings?.GroupBy(t => t.StrengthExercises.Any() ? "strength" : "cardio")
+            //     .ToDictionary(
+            //         group => group.Key,
+            //         group => group.SelectMany(t =>
+            //             group.Key == "strength"
+            //                 ? t.StrengthExercises.Select(se => $"name: {se.StrengthExercise.Name}")
+            //                 : t.CardioExercises.Select(ce => $"name: {ce.CardioExercise.Name}")
+            //         ).ToArray()
+            //     ),
+            
+            //moja propozyjca na te treningi tutaj nwm jak to do konca zrobic bo nie ogarniam tych slownikow :|
+            //jak to nie bedzie dzialac albo bedzie do dupy albo cos to mozesz po prostu w tych treningach wypisac nazwy
+            //treningow wszystkich dla uzytkownika i chyba bedzie git
+            Trainings = user.Trainings?
                 .ToDictionary(
-                    group => group.Key,
-                    group => group.SelectMany(t =>
-                        group.Key == "strength"
-                            ? t.StrengthExercises.Select(se => $"name: {se.StrengthExercise.Name}")
-                            : t.CardioExercises.Select(ce => $"name: {ce.CardioExercise.Name}")
-                    ).ToArray()
+                    t => t.Name,
+                    t => t.StrengthExercises
+                        .Select(se => se.StrengthExercise.Name)
+                        .Concat(t.CardioExercises.Select(ce => ce.CardioExercise.Name))
+                        .ToList()
                 ),
+                    
             MealPlans = user.MealPlans?.Select(mp =>
                 mp.Meals.Select(m => $"{m.Name} (calories: {m.CalculatedCalories})").ToArray()
             ).ToList()

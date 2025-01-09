@@ -13,6 +13,7 @@ public class GetUserResponseDto
     public int Age { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? ModifiedAt { get; set; }
-    public Dictionary<string,string[]>? Trainings { get; set; }
+    // public Dictionary<string,string[]>? Trainings { get; set; }
+    public Dictionary<string, List<string>> Trainings{ get; set; }
     public List<string[]>? MealPlans { get; set; }
 }
