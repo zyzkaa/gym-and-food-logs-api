@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using Microsoft.VisualBasic;
 using WebApp.Entities;
 
@@ -15,11 +16,11 @@ public class TrainingDto
     
     public TimeSpan? Duration { get; set; } = TimeSpan.Zero;
     
-    public record StrParamsDto(int Set, int Weight, int Repetitions);
-    public record StrengthExerciseDto(int ExerciseId, IEnumerable<StrParamsDto> StrParams);
-    public ICollection<StrengthExerciseDto>? StrExercisesDto { get; set; }
-
-    public record CarParamsDto(int Interval, int Speed, TimeSpan Time);
-    public record CarExerciseDto(int ExerciseId, IEnumerable<CarParamsDto> CarParams);
-    public ICollection<CarExerciseDto>? CarExercisesDto { get; set; }
+    public record StrengthParamsDto(int Set, int Weight, int Repetitions);
+    public record StrengthExerciseDto(int ExerciseId, IEnumerable<StrengthParamsDto> StrengthExerciseParams);
+    public ICollection<StrengthExerciseDto>? StrengthExercises { get; set; }
+    
+    public record CardioParamsDto(int Interval, int Speed, TimeSpan Time);
+    public record CardioExerciseDto(int ExerciseId, IEnumerable<CardioParamsDto> CardioExerciseParams);
+    public ICollection<CardioExerciseDto>? CardioExercises { get; set; }
 }

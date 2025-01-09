@@ -13,7 +13,6 @@ public class TrainingResponseDto
     public record StrengthExerciseResponseDto(StrengthExercise StrengthExercise, ICollection<StrParamsResponseDto> StrengthExerciseParams, double TotalExerciseVolume);
 
     [JsonPropertyName("strengthExercises")]
-    
     public ICollection<StrengthExerciseResponseDto>? StrExercisesResponseDto { get; set; } =
         new List<StrengthExerciseResponseDto>();
 

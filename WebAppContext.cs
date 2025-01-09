@@ -11,13 +11,12 @@ public class WebAppContext : DbContext
 
     public DbSet<StrengthExercise> StrengthExercises { get; set; }
     public DbSet<Muscle> Muscles { get; set; }
-    public DbSet<StrengthExerciseInTraining> StrExerciseInTrainings { get; set; }
-    public DbSet<StrengthExerciseParams> StrParams { get; set; }
-    
+    public DbSet<StrengthExerciseInTraining> StrengthExercisesInTraining{ get; set; }
+    public DbSet<StrengthExerciseParams> StrengthExerciseParams { get; set; }
     public DbSet<CardioExercise> CardioExercises { get; set; }
-    public DbSet<CardioExerciseInTraining> CarExercisesInTrainings { get; set; }
+    public DbSet<CardioExerciseInTraining> CardioExerciseInTraining { get; set; }
     public DbSet<Met> Mets { get; set; }
-    public DbSet<CardioExerciseParams> CarParams { get; set; }
+    public DbSet<CardioExerciseParams> CardioExerciseParams { get; set; }
     
     public DbSet<Product> Products { get; set; }
     public DbSet<Meal> Meals { get; set; }

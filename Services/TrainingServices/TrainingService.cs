@@ -44,7 +44,7 @@ public class TrainingService : ITrainingService
             User = GetCurrentUser()
         };
         
-        foreach (var strExerciseInTraining in dto.StrExercisesDto)
+        foreach (var strExerciseInTraining in dto.StrengthExercises)
         {
             StrengthExerciseInTraining newStrEx = new StrengthExerciseInTraining()
             {
@@ -52,7 +52,7 @@ public class TrainingService : ITrainingService
                 Params = new List<StrengthExerciseParams>()
             };
             
-            foreach (var strParams in strExerciseInTraining.StrParams)
+            foreach (var strParams in strExerciseInTraining.StrengthExerciseParams)
             { 
                 var newParams = new StrengthExerciseParams()
                 {
@@ -66,7 +66,7 @@ public class TrainingService : ITrainingService
             newTraining.StrengthExercises.Add(newStrEx);
         }
         
-        foreach (var carExerciseInTraining in dto.CarExercisesDto)
+        foreach (var carExerciseInTraining in dto.CardioExercises)
         {
             CardioExerciseInTraining newCarEx = new CardioExerciseInTraining()
             {
@@ -74,7 +74,7 @@ public class TrainingService : ITrainingService
                 Params = new List<CardioExerciseParams>()
             };
 
-            foreach (var carParams in carExerciseInTraining.CarParams)
+            foreach (var carParams in carExerciseInTraining.CardioExerciseParams)
             {
                 var newParams = new CardioExerciseParams()
                 {
