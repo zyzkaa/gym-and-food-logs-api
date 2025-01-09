@@ -40,5 +40,6 @@ public class User
     
     [SwaggerSchema(ReadOnly = true)]
     public ICollection<Training>? Trainings { get; set; }
+    [SwaggerSchema(ReadOnly = true)]
     public List<MealPlan>? MealPlans { get; set; }
 }
