@@ -10,17 +10,15 @@ public class TrainingResponseDto
     public TimeSpan? Duration { get; set; } = TimeSpan.Zero;
     
     public record StrParamsResponseDto(int Set, int Weight, int Repetitions, double Volume);
-    public record StrengthExerciseResponseDto(StrengthExercise StrengthExercise, ICollection<StrParamsResponseDto> StrengthExerciseParams, double TotalExerciseVolume);
+    public record StrengthExerciseResponseDto(StrengthExercise StrengthExercise, ICollection<StrParamsResponseDto> Params, double TotalExerciseVolume);
 
-    [JsonPropertyName("strengthExercises")]
-    public ICollection<StrengthExerciseResponseDto>? StrExercisesResponseDto { get; set; } =
+    public ICollection<StrengthExerciseResponseDto>? StrengthExercises { get; set; } =
         new List<StrengthExerciseResponseDto>();
 
     public record CarParamsResponseDto(int Interval, double Speed, TimeSpan Time, double Calories);
-    public record CarExerciseResponseDto(CardioExercise CardioExercise, IEnumerable<CarParamsResponseDto> CardioExerciseParams, double Calories);
+    public record CarExerciseResponseDto(CardioExercise CardioExercise, IEnumerable<CarParamsResponseDto> Params, double Calories);
 
-    [JsonPropertyName("cardioExercises")]
-    public ICollection<CarExerciseResponseDto>? CarExercisesResponseDto { get; set; } =
+    public ICollection<CarExerciseResponseDto>? CardioExercises { get; set; } =
         new List<CarExerciseResponseDto>();
     public double TotalCalories { get; set; }
 }

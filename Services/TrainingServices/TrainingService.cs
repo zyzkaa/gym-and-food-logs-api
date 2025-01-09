@@ -52,7 +52,7 @@ public class TrainingService : ITrainingService
                 Params = new List<StrengthExerciseParams>()
             };
             
-            foreach (var strParams in strExerciseInTraining.StrengthExerciseParams)
+            foreach (var strParams in strExerciseInTraining.Params)
             { 
                 var newParams = new StrengthExerciseParams()
                 {
@@ -74,7 +74,7 @@ public class TrainingService : ITrainingService
                 Params = new List<CardioExerciseParams>()
             };
 
-            foreach (var carParams in carExerciseInTraining.CardioExerciseParams)
+            foreach (var carParams in carExerciseInTraining.Params)
             {
                 var newParams = new CardioExerciseParams()
                 {
@@ -117,7 +117,7 @@ public class TrainingService : ITrainingService
             var newExercise = new TrainingResponseDto.StrengthExerciseResponseDto(
                 strExerciseInTraining.StrengthExercise, paramsList, volume);
             
-            trainingResponse.StrExercisesResponseDto.Add(newExercise);
+            trainingResponse.StrengthExercises.Add(newExercise);
         }
         
         double totalCalories = 0;
@@ -146,7 +146,7 @@ public class TrainingService : ITrainingService
             var newExercise = new TrainingResponseDto.CarExerciseResponseDto(carExerciseInTraining.CardioExercise,
                 paramsList, caloriesInExercise);
             totalCalories += caloriesInExercise;
-            trainingResponse.CarExercisesResponseDto.Add(newExercise);
+            trainingResponse.CardioExercises.Add(newExercise);
         }
         
         trainingResponse.TotalCalories = totalCalories;

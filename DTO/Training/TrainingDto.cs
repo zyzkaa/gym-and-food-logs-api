@@ -17,10 +17,10 @@ public class TrainingDto
     public TimeSpan? Duration { get; set; } = TimeSpan.Zero;
     
     public record StrengthParamsDto(int Set, int Weight, int Repetitions);
-    public record StrengthExerciseDto(int ExerciseId, IEnumerable<StrengthParamsDto> StrengthExerciseParams);
+    public record StrengthExerciseDto(int ExerciseId, IEnumerable<StrengthParamsDto> Params);
     public ICollection<StrengthExerciseDto>? StrengthExercises { get; set; }
     
     public record CardioParamsDto(int Interval, int Speed, TimeSpan Time);
-    public record CardioExerciseDto(int ExerciseId, IEnumerable<CardioParamsDto> CardioExerciseParams);
+    public record CardioExerciseDto(int ExerciseId, IEnumerable<CardioParamsDto> Params);
     public ICollection<CardioExerciseDto>? CardioExercises { get; set; }
 }
