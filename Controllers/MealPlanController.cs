@@ -44,6 +44,24 @@ public class MealPlanController : ControllerBase
         return Ok(mealPlanfullMealDto);
     }
 
+    [HttpGet("get_by_calories_amount/{caloriesAmount}")]
+public async Task<IActionResult> GetMealPlanByCaloriesAmount(int caloriesAmount)
+{
+    var meals = await _mealPlanService.GetMealPlanByCalories(caloriesAmount);
+    
+    var suggestedMealPlan = new SuggestedMealPlanDto
+    {
+        mealPlanList = meals.Select(m => new string[]
+        {
+            m.Name,
+            m.CalculatedCalories.ToString(),
+        }).ToList()
+    };
+
+    return Ok(suggestedMealPlan);
+}
+
+
     [HttpDelete("delete/{id}")]
     public async Task<IActionResult> DeleteMealPlanById(int id)
     {
