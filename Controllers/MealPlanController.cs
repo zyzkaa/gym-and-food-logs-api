@@ -22,8 +22,9 @@ public class MealPlanController : ControllerBase
     public async Task<IActionResult> AddMealPlan([FromBody] MealPlanDto mealPlanDto)
     {
         var mealPlan = await _mealPlanService.AddMealPlan(mealPlanDto);
-        
-        return Ok(mealPlanDto);
+        var mealPlanfullMealDto = MealPlanUtillity.ParseFullMealPlan(mealPlan);
+        return Ok(mealPlanfullMealDto);
+
     }
 
     [HttpGet("get_all")]
@@ -51,10 +52,10 @@ public async Task<IActionResult> GetMealPlanByCaloriesAmount(int caloriesAmount)
     
     var suggestedMealPlan = new SuggestedMealPlanDto
     {
-        mealPlanList = meals.Select(m => new string[]
-        {
-            m.Name,
-            m.CalculatedCalories.ToString(),
+        mealPlanList = meals.Select(m => new MealReturnDto(){
+            Id = m.Id,
+            Name = m.Name,
+            Calories = m.CalculatedCalories.ToString(),
         }).ToList()
     };
 

@@ -5,18 +5,15 @@ namespace WebApp.Utill.Meals;
 
 public static class MealUtillity
 {
-    public static MealDto ParseToMealDto(Meal meal)
+    public static MealReturnDto ParseToMealDto(Meal meal)
     {
-        MealDto mealDto = new MealDto()
+        MealReturnDto mealReturnDto = new MealReturnDto()
         {
-            Id = meal.Id,
             Name = meal.Name,
-            Ingredients = meal.Ingredients.Select(I => new MealIngredientDto
-            {
-                ProductId = I.Product.Id,
-                Quantity = I.Quantity
-            }).ToList()
+            Calories = meal.CalculatedCalories.ToString(),
+            Ingredients = meal.Ingredients.Select(I => 
+                I.Product.Name).ToList()
         };
-        return mealDto;
+        return mealReturnDto;
     }
 }

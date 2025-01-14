@@ -68,6 +68,7 @@ public class MealPlanService : IMealPlanService
             .Include(mp => mp.Meals)
             .ThenInclude(m => m.Ingredients)
             .ThenInclude(i => i.Product)
+            .Include(u => u.User)
             .ToListAsync();
     }
 
@@ -84,7 +85,10 @@ public class MealPlanService : IMealPlanService
     public async Task<List<Meal>> GetMealPlanByCalories(int calories)
     {
         // Pobierz wszystkie posiłki z bazy
-        var allMeals = await _dbContext.Meals.ToListAsync();
+        var allMeals = await _dbContext.Meals
+                                .Include(m => m.Ingredients)
+                                .ThenInclude(i => i.Product)
+                                .ToListAsync();
 
         // Przefiltruj posiłki, które mają mniej kalorii niż `targetCalories`
         var filteredMeals = allMeals.Where(m => m.CalculatedCalories <= calories).ToList();
@@ -100,20 +104,18 @@ public class MealPlanService : IMealPlanService
         List<Meal> result = null;
         int bestDifference = int.MaxValue;
 
-        for (int i = 0; i < 100; i++) // Powtórz losowanie do 100 razy, aby znaleźć najlepszą kombinację
+        for (int i = 0; i < 100; i++) 
         {
             var selectedMeals = filteredMeals.OrderBy(x => random.Next()).Take(3).ToList();
             int totalCalories = selectedMeals.Sum(m => (int)m.CalculatedCalories);
-
-            // Jeśli różnica między `totalCalories` a `targetCalories` jest mniejsza, zapisz tę kombinację
+            
             int difference = Math.Abs(calories - totalCalories);
             if (difference < bestDifference)
             {
                 bestDifference = difference;
                 result = selectedMeals;
             }
-
-            // Jeśli znaleziono idealną kombinację, przerwij
+            
             if (bestDifference == 0)
                 break;
         }

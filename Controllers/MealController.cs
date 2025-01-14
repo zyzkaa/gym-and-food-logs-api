@@ -38,7 +38,7 @@ public class MealController : ControllerBase
     public async Task<IActionResult> GetMealById(int id)
     {
         var meal = await _mealService.GetMealById(id);
-        MealDto mealDtoResponse = MealUtillity.ParseToMealDto(meal);
+        var mealDtoResponse = MealUtillity.ParseToMealDto(meal);
         return Ok(mealDtoResponse);
     }
 

@@ -11,9 +11,9 @@ public static class MealPlanUtillity
         {
             Id = mealPlan.Id,
             Date = mealPlan.Date,
-            UserName = mealPlan.User?.Username ?? "", // Jeśli mp.User == null, ustaw domyślną wartość 0
+            UserName = mealPlan.User?.Username ?? "",
             MealsName = mealPlan.Meals?.Select(m => m.Name).ToList() ??
-                        new List<string>() // Jeśli mp.Meals == null, ustaw pustą listę
+                        new List<string>() 
         };
     }
 }
