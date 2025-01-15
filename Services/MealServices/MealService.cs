@@ -59,7 +59,10 @@ public class MealService : IMealService
     }
     public async Task<Meal> DeleteMealById(int mealId)
     {
-        var meal = await _dbContext.Meals.FindAsync(mealId)
+        var meal = await _dbContext.Meals
+            .Include(m => m.Ingredients)
+            .ThenInclude(i => i.Product)
+            .FirstOrDefaultAsync(m => m.Id == mealId)
                    ?? throw new KeyNotFoundException("Meal not found");
         _dbContext.Meals.Remove(meal);
         await _dbContext.SaveChangesAsync();

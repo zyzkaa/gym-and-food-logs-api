@@ -30,7 +30,10 @@ public class UsersService : IUsersService
             .ThenInclude(t => t.CardioExercises) 
             .ThenInclude(e=>e.CardioExercise)
             .Include(u => u.MealPlans) 
-            .ThenInclude(mp => mp.Meals).FirstOrDefault(u => u.Id == int.Parse(_httpContentAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            .ThenInclude(mp => mp.Meals)
+            .ThenInclude(m => m.Ingredients)
+            .ThenInclude(I =>I.Product )
+            .FirstOrDefault(u => u.Id == int.Parse(_httpContentAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value));
         
         var userDto = new GetUserResponseDto()
         {
