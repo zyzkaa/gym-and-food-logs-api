@@ -8,7 +8,7 @@ using WebApp.Services.TrainingServices;
 namespace WebApp.Controllers;
 
 [ApiController]
-[Authorize]
+// [Authorize]
 [Route("training")]
 public class TrainingController : ControllerBase    
 {
@@ -33,43 +33,43 @@ public class TrainingController : ControllerBase
         return Ok(trainingResponse);
     }
 
-    [HttpGet("get_all")]
+    [HttpGet("")]
     public async Task<IActionResult> GetAllTrainings()
     {
         return Ok(await _trainingService.GetTrainings());
     }
     
-    [HttpGet("get_by_id/{id}")] //????????????
+    [HttpGet("id/{id}")] //????????????
     public async Task<IActionResult> GetTrainingById(int id)
     {
         return Ok(await _trainingService.GetTrainingById(id));
     }
 
-    [HttpGet("get_by_date/{date}")]
+    [HttpGet("date/{date}")]
     public async Task<IActionResult> GetTrainingsByDate(DateOnly date)
     {
         return Ok(await _trainingService.GetTrainingsByDate(date));
     }
 
-    [HttpGet("get_by_strength_exercise_id/{id}")]
+    [HttpGet("strength_id/{id}")]
     public async Task<IActionResult> GetTrainingsByStrengthExerciseId(int id)
     {
         return Ok(await _trainingService.GetTrainingsByStrengthExerciseId(id));
     }
     
-    [HttpGet("get_by_cardio_exercise_id/{id}")]
+    [HttpGet("cardio_id/{id}")]
     public async Task<IActionResult> GetTrainingsByCarExerciseId(int id)
     {
         return Ok(await _trainingService.GetTrainingsByCardioExerciseId(id));
     }
 
-    [HttpGet("get_with_details/{id}")]
+    [HttpGet("details/{id}")]
     public async Task<IActionResult> GetTrainingsWithDetails(int id)
     {
         return Ok(await _trainingService.GetTrainingWithDetails(id));
     }
 
-    [HttpGet("get_with_records_by_strength_exercise_id/{id}")]
+    [HttpGet("details/strength_id/{id}")]
     public async Task<IActionResult> GetTrainingsWithRecordsByStrExerciseId(int id)
     {
         return Ok(await _trainingService.GetTrainigsWithRecordsByStrengthExerciseId(id));

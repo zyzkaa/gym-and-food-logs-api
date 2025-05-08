@@ -34,16 +34,22 @@ public class UsersController : ControllerBase
         return userResponseDto.Message == null ? Ok(userResponseDto) : NotFound(userResponseDto.Message);
     }
 
+    [HttpPost("temp_login")]
+    public async void TempLoginUser()
+    {
+        var userResponseDto = await _usersService.LoginUser(new LoginUserDto("user1", "password123"));
+    }
+
     [HttpPost("logout")]
-    [Authorize]
+    // [Authorize]
     public async Task<IActionResult> LogoutUser()
     {
         var userResponseDto = await _usersService.LogoutUser();
         return Ok(userResponseDto);
     }
 
-    [HttpPut("change_parameters")]
-    [Authorize]
+    [HttpPut("details")]
+    // [Authorize]
     public async Task<IActionResult> ChangeUserParameters([FromBody] UserParametersDto userParametersDto)
     {
         var userParametersResponseDto = await _usersService.ChangeUserParameters(userParametersDto);
@@ -51,7 +57,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize]
+    // [Authorize]
     public IActionResult GetUser()
     {
         return Ok(_usersService.GetUser());
