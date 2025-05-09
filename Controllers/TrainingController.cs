@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.DTO;
 using WebApp.Entities;
+using WebApp.Mappers;
 using WebApp.Services.TrainingServices;
 
 namespace WebApp.Controllers;
@@ -20,9 +21,9 @@ public class TrainingController : ControllerBase
     }
 
     [HttpPost("add")]
-    public async Task<IActionResult> AddTraining(TrainingDto trainingDto)
+    public async Task<IActionResult> AddTraining(TrainingRequestDto trainingRequestDto)
     {
-        var trainingResponse = await _trainingService.AddTraining(trainingDto);
+        var trainingResponse = await _trainingService.AddTraining(trainingRequestDto);
         return Ok(trainingResponse);
     }
 
@@ -33,10 +34,11 @@ public class TrainingController : ControllerBase
         return Ok(trainingResponse);
     }
 
-    [HttpGet("")]
-    public async Task<IActionResult> GetAllTrainings()
+    [HttpGet("{page}/{amount}")]
+    public async Task<IActionResult> GetAllTrainings(int page, int amount)
     {
-        return Ok(await _trainingService.GetTrainings());
+        var trainings = await _trainingService.GetTrainings(page, amount);
+        return Ok(trainings.Select(TrainingMapper.ToShortResponseDto).ToList());
     }
     
     [HttpGet("id/{id}")] //????????????

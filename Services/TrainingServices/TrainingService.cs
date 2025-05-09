@@ -34,17 +34,17 @@ public class TrainingService : ITrainingService
         return training.User.Id == GetCurrentUserId();
     }
 
-    Training ParseTrainingFromDto(TrainingDto dto)
+    Training ParseTrainingFromDto(TrainingRequestDto requestDto)
     {
         Training newTraining = new Training()
         {
-            Name = dto.Name,
-            Date = dto.Date,
-            Duration = dto.Duration,
+            Name = requestDto.Name,
+            Date = requestDto.Date,
+            Duration = requestDto.Duration,
             User = GetCurrentUser()
         };
         
-        foreach (var strExerciseInTraining in dto.StrengthExercises)
+        foreach (var strExerciseInTraining in requestDto.StrengthExercises)
         {
             StrengthExerciseInTraining newStrEx = new StrengthExerciseInTraining()
             {
@@ -66,7 +66,7 @@ public class TrainingService : ITrainingService
             newTraining.StrengthExercises.Add(newStrEx);
         }
         
-        foreach (var carExerciseInTraining in dto.CardioExercises)
+        foreach (var carExerciseInTraining in requestDto.CardioExercises)
         {
             CardioExerciseInTraining newCarEx = new CardioExerciseInTraining()
             {
@@ -154,9 +154,9 @@ public class TrainingService : ITrainingService
         return trainingResponse;
     }
         
-    public async Task<TrainingResponseDto> AddTraining(TrainingDto trainingDto)
+    public async Task<TrainingResponseDto> AddTraining(TrainingRequestDto trainingRequestDto)
     {
-        Training training = ParseTrainingFromDto(trainingDto);
+        Training training = ParseTrainingFromDto(trainingRequestDto);
         await _dbContext.Trainings.AddAsync(training);
         await _dbContext.SaveChangesAsync();
         return await ParseTrainingToDetailedDto(training);
@@ -172,10 +172,13 @@ public class TrainingService : ITrainingService
             .ThenInclude(e => e.CardioExercise);
     }
 
-    public Task<List<Training>> GetTrainings()
+    public Task<List<Training>> GetTrainings(int page, int amount)
     {
         return GetTrainingSummary()
             .Where(t => t.User.Id == GetCurrentUserId())
+            .OrderByDescending(t => t.Date)
+            .Skip(amount * (page - 1))
+            .Take(amount)
             .ToListAsync();
     }
 
