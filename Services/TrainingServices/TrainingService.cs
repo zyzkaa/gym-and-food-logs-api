@@ -2,6 +2,7 @@ using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using WebApp.DTO;
 using WebApp.Entities;
+using WebApp.Mappers;
 
 namespace WebApp.Services.TrainingServices;
 
@@ -34,132 +35,135 @@ public class TrainingService : ITrainingService
         return training.User.Id == GetCurrentUserId();
     }
 
-    Training ParseTrainingFromDto(TrainingRequestDto requestDto)
-    {
-        Training newTraining = new Training()
-        {
-            Name = requestDto.Name,
-            Date = requestDto.Date,
-            Duration = requestDto.Duration,
-            User = GetCurrentUser()
-        };
-        
-        foreach (var strExerciseInTraining in requestDto.StrengthExercises)
-        {
-            StrengthExerciseInTraining newStrEx = new StrengthExerciseInTraining()
-            {
-                StrengthExercise = _dbContext.StrengthExercises.Find(strExerciseInTraining.ExerciseId),
-                Params = new List<StrengthExerciseParams>()
-            };
-            
-            foreach (var strParams in strExerciseInTraining.Params)
-            { 
-                var newParams = new StrengthExerciseParams()
-                {
-                    Set = strParams.Set,
-                    Weight = strParams.Weight,
-                    Repetitions = strParams.Repetitions
-                };
-                newStrEx.Params.Add(newParams);
-            }
-            
-            newTraining.StrengthExercises.Add(newStrEx);
-        }
-        
-        foreach (var carExerciseInTraining in requestDto.CardioExercises)
-        {
-            CardioExerciseInTraining newCarEx = new CardioExerciseInTraining()
-            {
-                CardioExercise = _dbContext.CardioExercises.Find(carExerciseInTraining.ExerciseId),
-                Params = new List<CardioExerciseParams>()
-            };
-
-            foreach (var carParams in carExerciseInTraining.Params)
-            {
-                var newParams = new CardioExerciseParams()
-                {
-                    Inteval = carParams.Interval,
-                    Speed = carParams.Speed,
-                    Time = carParams.Time
-                };
-                newCarEx.Params.Add(newParams);
-            }
-            
-            newTraining.CardioExercises.Add(newCarEx);
-        }
-
-        return newTraining;
-    }
+    // Training ParseTrainingFromDto(TrainingRequestDto requestDto)
+    // {
+    //     Training newTraining = new Training()
+    //     {
+    //         Name = requestDto.Name,
+    //         Date = requestDto.Date,
+    //         Duration = requestDto.Duration,
+    //         User = GetCurrentUser()
+    //     };
+    //     
+    //     foreach (var strExerciseInTraining in requestDto.StrengthExercises)
+    //     {
+    //         StrengthExerciseInTraining newStrEx = new StrengthExerciseInTraining()
+    //         {
+    //             StrengthExercise = _dbContext.StrengthExercises.Find(strExerciseInTraining.ExerciseId),
+    //             Params = new List<StrengthExerciseParams>()
+    //         };
+    //         
+    //         foreach (var strParams in strExerciseInTraining.Params)
+    //         { 
+    //             var newParams = new StrengthExerciseParams()
+    //             {
+    //                 Set = strParams.Set,
+    //                 Weight = strParams.Weight,
+    //                 Repetitions = strParams.Repetitions
+    //             };
+    //             newStrEx.Params.Add(newParams);
+    //         }
+    //         
+    //         newTraining.StrengthExercises.Add(newStrEx);
+    //     }
+    //     
+    //     foreach (var carExerciseInTraining in requestDto.CardioExercises)
+    //     {
+    //         CardioExerciseInTraining newCarEx = new CardioExerciseInTraining()
+    //         {
+    //             CardioExercise = _dbContext.CardioExercises.Find(carExerciseInTraining.ExerciseId),
+    //             Params = new List<CardioExerciseParams>()
+    //         };
+    //
+    //         foreach (var carParams in carExerciseInTraining.Params)
+    //         {
+    //             var newParams = new CardioExerciseParams()
+    //             {
+    //                 Inteval = carParams.Interval,
+    //                 Speed = carParams.Speed,
+    //                 Time = carParams.Time
+    //             };
+    //             newCarEx.Params.Add(newParams);
+    //         }
+    //         
+    //         newTraining.CardioExercises.Add(newCarEx);
+    //     }
+    //
+    //     return newTraining;
+    // }
     
-    private async Task<TrainingResponseDto> ParseTrainingToDetailedDto(Training training)
+    // private async Task<TrainingResponseDto> ParseTrainingToDetailedDto(Training training)
+    // {
+    //     var trainingResponse = new TrainingResponseDto()
+    //     {
+    //         Id = training.Id,
+    //         Name = training.Name,
+    //         Duration = training.Duration,
+    //         Date = training.Date, 
+    //     };
+    //
+    //     foreach (var strExerciseInTraining in training.StrengthExercises)
+    //     {
+    //         var paramsList = new List<TrainingResponseDto.StrParamsResponseDto>();
+    //         double volume = 0;
+    //         
+    //         foreach (var strParams in strExerciseInTraining.Params)
+    //         {
+    //             var newParams = new TrainingResponseDto.StrParamsResponseDto(strParams.Set, strParams.Weight,
+    //                 strParams.Repetitions, strParams.Weight * strParams.Repetitions);
+    //             
+    //             paramsList.Add(newParams);
+    //             volume += newParams.Volume;
+    //         }
+    //
+    //         var newExercise = new TrainingResponseDto.StrengthExerciseResponseDto(
+    //             strExerciseInTraining.StrengthExercise, paramsList, volume);
+    //         
+    //         trainingResponse.StrengthExercises.Add(newExercise);
+    //     }
+    //     
+    //     double totalCalories = 0;
+    //     foreach (var carExerciseInTraining in training.CardioExercises)
+    //     {
+    //         var paramsList = new List<TrainingResponseDto.CarParamsResponseDto>();
+    //         double caloriesInExercise = 0;
+    //         
+    //         foreach (var carParams in carExerciseInTraining.Params)
+    //         {
+    //             var timeInHours = carParams.Time.TotalHours;
+    //             var met = await _dbContext.Mets
+    //                 .Where(m => m.cardioExercise == carExerciseInTraining.CardioExercise)
+    //                 .Where(m => m.StartSpeed <= carParams.Speed)
+    //                 .OrderByDescending(m => m.StartSpeed)
+    //                 .FirstAsync();
+    //             var calories = carParams.Speed * timeInHours * GetCurrentUser().Weight;
+    //
+    //             var newParams = new TrainingResponseDto.CarParamsResponseDto(carParams.Inteval, 
+    //                 carParams.Speed, carParams.Time, calories);
+    //             
+    //             paramsList.Add(newParams);
+    //             caloriesInExercise += calories;
+    //         }
+    //         
+    //         var newExercise = new TrainingResponseDto.CarExerciseResponseDto(carExerciseInTraining.CardioExercise,
+    //             paramsList, caloriesInExercise, );
+    //         totalCalories += caloriesInExercise;
+    //         trainingResponse.CardioExercises.Add(newExercise);
+    //     }
+    //     
+    //     trainingResponse.TotalCalories = totalCalories;
+    //
+    //     return trainingResponse;
+    // }
+        
+    public async Task<TrainingShortResponseDto> AddTraining(TrainingRequestDto trainingRequestDto)
     {
-        var trainingResponse = new TrainingResponseDto()
-        {
-            Id = training.Id,
-            Name = training.Name,
-            Duration = training.Duration
-        };
-
-        foreach (var strExerciseInTraining in training.StrengthExercises)
-        {
-            var paramsList = new List<TrainingResponseDto.StrParamsResponseDto>();
-            double volume = 0;
-            
-            foreach (var strParams in strExerciseInTraining.Params)
-            {
-                var newParams = new TrainingResponseDto.StrParamsResponseDto(strParams.Set, strParams.Weight,
-                    strParams.Repetitions, strParams.Weight * strParams.Repetitions);
-                
-                paramsList.Add(newParams);
-                volume += newParams.Volume;
-            }
-
-            var newExercise = new TrainingResponseDto.StrengthExerciseResponseDto(
-                strExerciseInTraining.StrengthExercise, paramsList, volume);
-            
-            trainingResponse.StrengthExercises.Add(newExercise);
-        }
-        
-        double totalCalories = 0;
-        foreach (var carExerciseInTraining in training.CardioExercises)
-        {
-            var paramsList = new List<TrainingResponseDto.CarParamsResponseDto>();
-            double caloriesInExercise = 0;
-            
-            foreach (var carParams in carExerciseInTraining.Params)
-            {
-                var timeInHours = carParams.Time.TotalHours;
-                var met = await _dbContext.Mets
-                    .Where(m => m.cardioExercise == carExerciseInTraining.CardioExercise)
-                    .Where(m => m.StartSpeed <= carParams.Speed)
-                    .OrderByDescending(m => m.StartSpeed)
-                    .FirstAsync();
-                var calories = carParams.Speed * timeInHours * GetCurrentUser().Weight;
-
-                var newParams = new TrainingResponseDto.CarParamsResponseDto(carParams.Inteval, 
-                    carParams.Speed, carParams.Time, calories);
-                
-                paramsList.Add(newParams);
-                caloriesInExercise += calories;
-            }
-            
-            var newExercise = new TrainingResponseDto.CarExerciseResponseDto(carExerciseInTraining.CardioExercise,
-                paramsList, caloriesInExercise);
-            totalCalories += caloriesInExercise;
-            trainingResponse.CardioExercises.Add(newExercise);
-        }
-        
-        trainingResponse.TotalCalories = totalCalories;
-
-        return trainingResponse;
-    }
-        
-    public async Task<TrainingResponseDto> AddTraining(TrainingRequestDto trainingRequestDto)
-    {
-        Training training = ParseTrainingFromDto(trainingRequestDto);
+        var strExercises = await _dbContext.StrengthExercises.ToListAsync();
+        var carExercises = await _dbContext.CardioExercises.ToListAsync();
+        Training training = trainingRequestDto.FromDto(GetCurrentUser(), carExercises, strExercises);
         await _dbContext.Trainings.AddAsync(training);
         await _dbContext.SaveChangesAsync();
-        return await ParseTrainingToDetailedDto(training);
+        return training.ToShortResponseDto(); 
     }
 
     private IQueryable<Training> GetTrainingSummary()
@@ -255,13 +259,13 @@ public class TrainingService : ITrainingService
             .ThenInclude(e => e.Muscles);
     }
 
-    public async Task<TrainingResponseDto> GetTrainingWithDetails(int trainingId)
+    public async Task<TrainingResponseDtoRec?> GetTrainingWithDetails(int trainingId)
     {
         var training = await GetTrainingWithDetailsQuery()
             .FirstOrDefaultAsync(t => t.Id == trainingId)
             ?? throw new KeyNotFoundException("Training not found");
         
-        return CheckUser(training) ? await ParseTrainingToDetailedDto(training) : null;
+        return CheckUser(training) ? training.ToResponseDto(GetCurrentUser()) : null;
     }
 
     public async Task<List<Training>> GetTrainigsWithRecordsByStrengthExerciseId(int exerciseId)

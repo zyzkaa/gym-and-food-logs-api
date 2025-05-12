@@ -10,4 +10,10 @@ public class LoginUserDto
     [Required (ErrorMessage = "Password is required")]
     [MinLength(1)]
     public string Password { get; set; }
+
+    public LoginUserDto(string username, string password)
+    {
+        this.Username = username;
+        this.Password = password;
+    }
 }

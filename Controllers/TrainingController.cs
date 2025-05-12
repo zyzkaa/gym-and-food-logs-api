@@ -41,11 +41,11 @@ public class TrainingController : ControllerBase
         return Ok(trainings.Select(TrainingMapper.ToShortResponseDto).ToList());
     }
     
-    [HttpGet("id/{id}")] //????????????
-    public async Task<IActionResult> GetTrainingById(int id)
-    {
-        return Ok(await _trainingService.GetTrainingById(id));
-    }
+    // [HttpGet("id/{id}")] //????????????
+    // public async Task<IActionResult> GetTrainingById(int id)
+    // {
+    //     return Ok(await _trainingService.GetTrainingById(id));
+    // }
 
     [HttpGet("date/{date}")]
     public async Task<IActionResult> GetTrainingsByDate(DateOnly date)
@@ -65,7 +65,7 @@ public class TrainingController : ControllerBase
         return Ok(await _trainingService.GetTrainingsByCardioExerciseId(id));
     }
 
-    [HttpGet("details/{id}")]
+    [HttpGet("id/{id}")] //????????????
     public async Task<IActionResult> GetTrainingsWithDetails(int id)
     {
         return Ok(await _trainingService.GetTrainingWithDetails(id));
