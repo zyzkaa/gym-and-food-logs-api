@@ -20,14 +20,14 @@ public class TrainingController : ControllerBase
         _trainingService = trainingService;
     }
 
-    [HttpPost("add")]
+    [HttpPost("")]
     public async Task<IActionResult> AddTraining(TrainingRequestDto trainingRequestDto)
     {
         var trainingResponse = await _trainingService.AddTraining(trainingRequestDto);
         return Ok(trainingResponse);
     }
 
-    [HttpDelete("delete/{id}")]
+    [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteTrainingById(int id)
     {
         var trainingResponse = await _trainingService.DeleteTrainingById(id);
@@ -65,7 +65,7 @@ public class TrainingController : ControllerBase
         return Ok(await _trainingService.GetTrainingsByCardioExerciseId(id));
     }
 
-    [HttpGet("id/{id}")] //????????????
+    [HttpGet("{id}")] //????????????
     public async Task<IActionResult> GetTrainingsWithDetails(int id)
     {
         return Ok(await _trainingService.GetTrainingWithDetails(id));

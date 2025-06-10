@@ -16,7 +16,19 @@ public class ExerciseController : ControllerBase
     public ExerciseController(IExerciseService exerciseService)
     {
         _exerciseService = exerciseService;
-    }     
+    }
+
+    [HttpGet("cardio/search/{name}")]
+    public async Task<IEnumerable<Exercise>> SearchCardio(string name)
+    {
+        return await _exerciseService.GetCardioExercisesBySearch(name);
+    }
+    
+    [HttpGet("strength/search/{name}")]
+    public async Task<IEnumerable<Exercise>> SearchStr(string name)
+    {
+        return await _exerciseService.GetStrExercisesBySearch(name);
+    }
     
     [HttpGet("strength/{id}")]
     public async Task<StrengthExercise> GetStrengthExerciseById(int id)

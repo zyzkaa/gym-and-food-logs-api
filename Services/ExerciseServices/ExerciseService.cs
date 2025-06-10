@@ -48,4 +48,23 @@ public class ExerciseService : IExerciseService
             .Where(e => e.Muscles.Any(m => m.Id == muscleId))
             .ToListAsync();
     }
+    
+    public async Task<List<CardioExercise>> GetCardioExercisesBySearch(string name)
+    {
+        var exercises = await _dbContext.CardioExercises
+            .Where(e => e.Name.ToLower().Contains(name.ToLower()))
+            .ToListAsync();
+        
+        return exercises;
+    }
+    
+
+    public async Task<List<StrengthExercise>> GetStrExercisesBySearch(string name)
+    {
+        var exercises = await _dbContext.StrengthExercises
+            .Where(e => e.Name.ToLower().Contains(name.ToLower()))
+            .ToListAsync();
+        
+        return exercises;
+    }
 }
