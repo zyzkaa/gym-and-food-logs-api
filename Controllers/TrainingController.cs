@@ -3,12 +3,13 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.DTO;
 using WebApp.Entities;
+using WebApp.Mappers;
 using WebApp.Services.TrainingServices;
 
 namespace WebApp.Controllers;
 
 [ApiController]
-[Authorize]
+// [Authorize]
 [Route("training")]
 public class TrainingController : ControllerBase    
 {
@@ -19,57 +20,58 @@ public class TrainingController : ControllerBase
         _trainingService = trainingService;
     }
 
-    [HttpPost("add")]
-    public async Task<IActionResult> AddTraining(TrainingDto trainingDto)
+    [HttpPost("")]
+    public async Task<IActionResult> AddTraining(TrainingRequestDto trainingRequestDto)
     {
-        var trainingResponse = await _trainingService.AddTraining(trainingDto);
+        var trainingResponse = await _trainingService.AddTraining(trainingRequestDto);
         return Ok(trainingResponse);
     }
 
-    [HttpDelete("delete/{id}")]
+    [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteTrainingById(int id)
     {
         var trainingResponse = await _trainingService.DeleteTrainingById(id);
         return Ok(trainingResponse);
     }
 
-    [HttpGet("get_all")]
-    public async Task<IActionResult> GetAllTrainings()
+    [HttpGet("{page}/{amount}")]
+    public async Task<IActionResult> GetAllTrainings(int page, int amount)
     {
-        return Ok(await _trainingService.GetTrainings());
+        var trainings = await _trainingService.GetTrainings(page, amount);
+        return Ok(trainings.Select(TrainingMapper.ToShortResponseDto).ToList());
     }
     
-    [HttpGet("get_by_id/{id}")] //????????????
-    public async Task<IActionResult> GetTrainingById(int id)
-    {
-        return Ok(await _trainingService.GetTrainingById(id));
-    }
+    // [HttpGet("id/{id}")] //????????????
+    // public async Task<IActionResult> GetTrainingById(int id)
+    // {
+    //     return Ok(await _trainingService.GetTrainingById(id));
+    // }
 
-    [HttpGet("get_by_date/{date}")]
+    [HttpGet("date/{date}")]
     public async Task<IActionResult> GetTrainingsByDate(DateOnly date)
     {
         return Ok(await _trainingService.GetTrainingsByDate(date));
     }
 
-    [HttpGet("get_by_strength_exercise_id/{id}")]
+    [HttpGet("strength_id/{id}")]
     public async Task<IActionResult> GetTrainingsByStrengthExerciseId(int id)
     {
         return Ok(await _trainingService.GetTrainingsByStrengthExerciseId(id));
     }
     
-    [HttpGet("get_by_cardio_exercise_id/{id}")]
+    [HttpGet("cardio_id/{id}")]
     public async Task<IActionResult> GetTrainingsByCarExerciseId(int id)
     {
         return Ok(await _trainingService.GetTrainingsByCardioExerciseId(id));
     }
 
-    [HttpGet("get_with_details/{id}")]
+    [HttpGet("{id}")] //????????????
     public async Task<IActionResult> GetTrainingsWithDetails(int id)
     {
         return Ok(await _trainingService.GetTrainingWithDetails(id));
     }
 
-    [HttpGet("get_with_records_by_strength_exercise_id/{id}")]
+    [HttpGet("details/strength_id/{id}")]
     public async Task<IActionResult> GetTrainingsWithRecordsByStrExerciseId(int id)
     {
         return Ok(await _trainingService.GetTrainigsWithRecordsByStrengthExerciseId(id));
