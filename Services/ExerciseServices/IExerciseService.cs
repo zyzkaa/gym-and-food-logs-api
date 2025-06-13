@@ -11,4 +11,9 @@ public interface IExerciseService
     public Task<List<StrengthExercise>> GetExercisesByMuscleId(int muscleId);
     public Task<List<CardioExercise>> GetCardioExercisesBySearch(string name);
     public Task<List<StrengthExercise>> GetStrExercisesBySearch(string name);
+    public Task<List<Muscle>> GetAllMuscles();
+    public Task<List<StrengthExercise>> GetStrExercisesBySearchAndMuscle(string name, int id);
+    public Task<List<StrengthExercise>> GetRecentStrExercises();
+
+
 }

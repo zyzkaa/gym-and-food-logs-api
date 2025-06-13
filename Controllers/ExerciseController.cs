@@ -30,6 +30,12 @@ public class ExerciseController : ControllerBase
         return await _exerciseService.GetStrExercisesBySearch(name);
     }
     
+    [HttpGet("strength/search/{name}/muscle/{id}")]
+    public async Task<IEnumerable<Exercise>> SearchStrByMuscleAndSearch(string name, int id)
+    {
+        return await _exerciseService.GetStrExercisesBySearchAndMuscle(name, id);
+    }
+    
     [HttpGet("strength/{id}")]
     public async Task<StrengthExercise> GetStrengthExerciseById(int id)
     {
@@ -53,10 +59,22 @@ public class ExerciseController : ControllerBase
     {
         return await _exerciseService.GetStrengthExercises();
     }
+    
+    [HttpGet("strength/latest")]
+    public async Task<List<StrengthExercise>> GetRecentStrengthExercises()
+    {
+        return await _exerciseService.GetRecentStrExercises();
+    }
 
     [HttpGet("muscle/{id}")]
     public async Task<List<StrengthExercise>> GetExercisesByMuscleId(int id)
     {
         return await _exerciseService.GetExercisesByMuscleId(id);
+    }
+
+    [HttpGet("muscles")]
+    public async Task<List<Muscle>> GetAllMuscles()
+    {
+        return await _exerciseService.GetAllMuscles();
     }
 }

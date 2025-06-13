@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Entities;
 
@@ -6,10 +7,13 @@ namespace WebApp.Services.ExerciseServices;
 public class ExerciseService : IExerciseService
 {
     private readonly WebAppContext _dbContext;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
     public ExerciseService(WebAppContext dbContext, IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
+        _httpContextAccessor = httpContextAccessor;
+
     }
     
     public async Task<StrengthExercise> GetStrengthExerciseById(int strExerciseId)
@@ -46,13 +50,14 @@ public class ExerciseService : IExerciseService
         
         return await _dbContext.StrengthExercises
             .Where(e => e.Muscles.Any(m => m.Id == muscleId))
+            .Include(e => e.Muscles)
             .ToListAsync();
     }
     
     public async Task<List<CardioExercise>> GetCardioExercisesBySearch(string name)
     {
         var exercises = await _dbContext.CardioExercises
-            .Where(e => e.Name.ToLower().Contains(name.ToLower()))
+            .Where(e => EF.Functions.Like(e.Name, $"%{name}%"))
             .ToListAsync();
         
         return exercises;
@@ -62,9 +67,41 @@ public class ExerciseService : IExerciseService
     public async Task<List<StrengthExercise>> GetStrExercisesBySearch(string name)
     {
         var exercises = await _dbContext.StrengthExercises
-            .Where(e => e.Name.ToLower().Contains(name.ToLower()))
+            .Where(e => EF.Functions.Like(e.Name, $"%{name}%"))
+            .Include(e => e.Muscles)
             .ToListAsync();
         
         return exercises;
     }
+
+    public async Task<List<Muscle>> GetAllMuscles()
+    {
+        return await _dbContext.Muscles.ToListAsync();
+    }
+    
+    public async Task<List<StrengthExercise>> GetStrExercisesBySearchAndMuscle(string name, int id)
+    {
+        return await _dbContext.StrengthExercises
+            .Where(e => e.Muscles.Any(m => m.Id == id))
+            .Where(e => EF.Functions.Like(e.Name, $"%{name}%"))
+            .Include(e => e.Muscles)
+            .ToListAsync();
+    }
+
+    public async Task<List<StrengthExercise>> GetRecentStrExercises()
+    {
+        int currentUserId =
+            int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+        return await _dbContext.StrengthExercisesInTraining
+            .Include(e => e.Training)
+            .Include(e => e.StrengthExercise.Muscles)
+            .Where(e => e.Training.User.Id == currentUserId)
+            .OrderByDescending(e => e.Training.Date)
+            .Select(e => e.StrengthExercise)
+            .Distinct()
+            .Take(7)
+            .ToListAsync();
+    }
+
 }
