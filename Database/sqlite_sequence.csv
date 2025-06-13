@@ -1,0 +1,15 @@
+name,seq
+CardioExercises,6
+Mets,30
+Muscles,12
+StrengthExercises,20
+Users,7
+Trainings,12
+StrengthExercisesInTraining,22
+StrengthExerciseParams,58
+CardioExerciseInTraining,12
+CardioExerciseParams,31
+Products,40
+Meals,20
+MealIngredients,61
+MealPlans,3

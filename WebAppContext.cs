@@ -69,5 +69,12 @@ public class WebAppContext : DbContext
             .HasMany(u => u.Trainings)
             .WithOne(t => t.User)
             .OnDelete(DeleteBehavior.Cascade);
+        
+        modelBuilder.Entity<Meal>()
+            .HasOne(m => m.Creator)
+            .WithMany(u => u.Meals) // assuming User has a `public ICollection<Meal> Meals` property
+            .HasForeignKey(m => m.CreatorID)
+            .OnDelete(DeleteBehavior.Cascade); // or Restrict/SetNull depending on your business logic
+
     }
 }

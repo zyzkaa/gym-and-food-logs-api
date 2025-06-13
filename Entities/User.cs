@@ -42,4 +42,5 @@ public class User
     public ICollection<Training>? Trainings { get; set; }
     [SwaggerSchema(ReadOnly = true)]
     public List<MealPlan>? MealPlans { get; set; }
+    public ICollection<Meal> Meals { get; set; } = new List<Meal>();
 }
