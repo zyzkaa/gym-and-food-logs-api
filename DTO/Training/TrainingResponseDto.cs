@@ -10,7 +10,7 @@ public class TrainingResponseDto
     public TimeSpan? Duration { get; set; } = TimeSpan.Zero;
     public DateOnly Date { get; set; }
     
-    public record StrParamsResponseDto(int Set, int Weight, int Repetitions, double Volume);
+    public record StrParamsResponseDto(int Set, double Weight, int Repetitions, double Volume);
     public record StrengthExerciseResponseDto(StrengthExercise StrengthExercise, ICollection<StrParamsResponseDto> Params, double TotalExerciseVolume);
 
     public ICollection<StrengthExerciseResponseDto>? StrengthExercises { get; set; } =

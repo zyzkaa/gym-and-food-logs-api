@@ -16,7 +16,7 @@ public class TrainingRequestDto
     
     public TimeSpan? Duration { get; set; } = TimeSpan.Zero;
     
-    public record StrengthParamsDto(int Set, int Weight, int Repetitions);
+    public record StrengthParamsDto(int Set, double Weight, int Repetitions);
     public record StrengthExerciseDto(int ExerciseId, IEnumerable<StrengthParamsDto> Params);
     public ICollection<StrengthExerciseDto>? StrengthExercises { get; set; }
     
