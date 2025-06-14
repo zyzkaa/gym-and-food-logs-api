@@ -8,7 +8,7 @@ using WebApp.Utill.Meals;
 namespace WebApp.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("meal")]
 public class MealController : ControllerBase
 {
     private readonly IMealService _mealService;

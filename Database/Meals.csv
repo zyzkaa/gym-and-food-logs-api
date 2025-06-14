@@ -1,19 +1,19 @@
-Id,Name
-1,Owsianka z jogurtem i owocami
-2,Kurczak z ryżem i brokułami
-3,Owsianka z bananami i migdałami
-4,Makaron z indykiem i cukinią
-5,Tofu z ciecierzycą i papryką
-6,Łosoś z ziemniakami i szpinakiem
-7,Jajecznica z szpinakiem i pomidorami
-8,Sardynki z awokado i chlebem pełnoziarnistym
-9,Twaróg z truskawkami i orzechami włoskimi
-10,Grillowana makrela z dynią i fasolką
-11,Kurczak z marchewką i ziemniakami
-12,Owsianka z winogronami i orzechami
-13,Filet z indyka z kukurydzą i brokułami
-14,Krewetki z ryżem i papryką
-15,Tofu z soczewicą i cukinią
-18,Łosoś z ziemniakami i awokado
-19,"Twaróg z bananami, miodem i migdałami"
-20,Grillowana makrela z ziemniakami i brokułami
+Id,Name,CreatorID
+1,Owsianka z jogurtem i owocami,1
+2,Kurczak z ryżem i brokułami,1
+3,Owsianka z bananami i migdałami,1
+4,Makaron z indykiem i cukinią,2
+5,Tofu z ciecierzycą i papryką,2
+6,Łosoś z ziemniakami i szpinakiem,2
+7,Jajecznica z szpinakiem i pomidorami,2
+8,Sardynki z awokado i chlebem pełnoziarnistym,3
+9,Twaróg z truskawkami i orzechami włoskimi,3
+10,Grillowana makrela z dynią i fasolką,4
+11,Kurczak z marchewką i ziemniakami,4
+12,Owsianka z winogronami i orzechami,4
+13,Filet z indyka z kukurydzą i brokułami,5
+14,Krewetki z ryżem i papryką,5
+15,Tofu z soczewicą i cukinią,5
+18,Łosoś z ziemniakami i awokado,6
+19,"Twaróg z bananami, miodem i migdałami",6
+20,Grillowana makrela z ziemniakami i brokułami,7

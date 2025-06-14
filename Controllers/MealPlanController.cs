@@ -54,8 +54,10 @@ public async Task<IActionResult> GetMealPlanByCaloriesAmount(int caloriesAmount)
     {
         mealPlanList = meals.Select(m => new MealReturnDto(){
             Id = m.Id,
-            Name = m.Name,
-            Calories = m.CalculatedCalories.ToString(),
+            Name = m.Name, 
+            CreatorID = m.CreatorID,
+            CreatedAt = m.CreatedAt,
+            Calories = m.CalculatedCalories,
         }).ToList()
     };
 

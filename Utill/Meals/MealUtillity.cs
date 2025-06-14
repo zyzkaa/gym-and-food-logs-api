@@ -9,10 +9,18 @@ public static class MealUtillity
     {
         MealReturnDto mealReturnDto = new MealReturnDto()
         {
+            Id = meal.Id,
             Name = meal.Name,
-            Calories = meal.CalculatedCalories.ToString(),
-            Ingredients = meal.Ingredients.Select(I => 
-                I.Product.Name).ToList()
+            Calories = meal.CalculatedCalories,
+            CreatorID = meal.CreatorID,
+            CreatedAt = meal.CreatedAt,
+            Ingredients = meal.Ingredients
+                .Select(i => new IngredientReturnDTO
+                {
+                    Id = i.Product.Id,
+                    Name = i.Product.Name
+                }).ToList()
+
         };
         return mealReturnDto;
     }

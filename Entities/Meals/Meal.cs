@@ -8,6 +8,7 @@ public class Meal
     public string Name { get; set; }
     public int CreatorID {get; set;}
     public User Creator { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
     public ICollection<MealIngredient> Ingredients { get; set; } = new List<MealIngredient>();
 
     // Właściwość obliczana
