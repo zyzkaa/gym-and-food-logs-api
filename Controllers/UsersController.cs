@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.DTO;
 using WebApp.Entities;
+using WebApp.Services.NotificationServices;
 using WebApp.Services.UsersServices;
 
 namespace WebApp.Controllers;
@@ -38,6 +39,12 @@ public class UsersController : ControllerBase
     public async void TempLoginUser()
     {
         var userResponseDto = await _usersService.LoginUser(new LoginUserDto("user1", "password123"));
+    }
+
+    [HttpGet("notification")]
+    public async void SendNotification()
+    {
+        await TrainingNotificationService.SendAsync();
     }
 
     [HttpPost("logout")]

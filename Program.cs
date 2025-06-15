@@ -6,6 +6,7 @@ using WebApp;
 using WebApp.Services.ExerciseServices;
 using WebApp.Services.MealPlanServices;
 using WebApp.Services.MealServices;
+using WebApp.Services.NotificationServices;
 using WebApp.Services.TrainingServices;
 using WebApp.Services.UsersServices;
 
@@ -26,6 +27,7 @@ builder.Services.AddSwaggerGen(options =>
 });
 builder.Services.AddDbContext<WebAppContext>();
 
+builder.Services.AddHostedService<WeeklyNotificationService>();
 builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<ITrainingService, TrainingService>();
 builder.Services.AddScoped<IExerciseService, ExerciseService>();
@@ -70,7 +72,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.UseSession();
-
 
 app.Run();
 
