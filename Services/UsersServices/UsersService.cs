@@ -54,8 +54,8 @@ public class UsersService : IUsersService
                 .ToDictionary(
                     t => t.Name,
                     t => t.StrengthExercises
-                        .Select(se => se.StrengthExercise.Name)
-                        .Concat(t.CardioExercises.Select(ce => ce.CardioExercise.Name))
+                        .Select(se => se.StrengthExercise.NameEn)
+                        .Concat(t.CardioExercises.Select(ce => ce.CardioExercise.NameEn))
                         .ToList()
                 ),
                     

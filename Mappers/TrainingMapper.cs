@@ -10,11 +10,11 @@ public static class TrainingMapper
         var exerciseList = new List<String>();
         foreach (var exercise in training.CardioExercises)
         {
-            exerciseList.Add(exercise.CardioExercise.Name);
+            exerciseList.Add(exercise.CardioExercise.NameEn);
         }
         foreach (var exercise in training.StrengthExercises)
         {
-            exerciseList.Add(exercise.StrengthExercise.Name);
+            exerciseList.Add(exercise.StrengthExercise.NameEn);
         }
 
         return new TrainingShortResponseDto(

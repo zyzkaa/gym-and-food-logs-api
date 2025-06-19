@@ -1,7 +1,7 @@
-Id;Name
-1;Walking
-2;Running
-3;Cycling
-4;Elliptical
-5;Rowing
-6;Swimming
+Id;NameEn;NamePl
+1;Walking;Chodzenie
+2;Running;Bieganie
+3;Cycling;Jazda na rowerze
+4;Elliptical;Trening na orbitreku
+5;Rowing;Wioślarstwo
+6;Swimming;Pływanie

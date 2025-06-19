@@ -57,7 +57,9 @@ public class ExerciseService : IExerciseService
     public async Task<List<CardioExercise>> GetCardioExercisesBySearch(string name)
     {
         var exercises = await _dbContext.CardioExercises
-            .Where(e => EF.Functions.Like(e.Name, $"%{name}%"))
+            .Where(e =>
+                EF.Functions.Like(e.NameEn, $"%{name}%") ||
+                EF.Functions.Like(e.NamePl, $"%{name}%"))
             .ToListAsync();
         
         return exercises;
@@ -67,7 +69,9 @@ public class ExerciseService : IExerciseService
     public async Task<List<StrengthExercise>> GetStrExercisesBySearch(string name)
     {
         var exercises = await _dbContext.StrengthExercises
-            .Where(e => EF.Functions.Like(e.Name, $"%{name}%"))
+            .Where(e =>
+                EF.Functions.Like(e.NameEn, $"%{name}%") ||
+                EF.Functions.Like(e.NamePl, $"%{name}%"))
             .Include(e => e.Muscles)
             .ToListAsync();
         
@@ -83,7 +87,9 @@ public class ExerciseService : IExerciseService
     {
         return await _dbContext.StrengthExercises
             .Where(e => e.Muscles.Any(m => m.Id == id))
-            .Where(e => EF.Functions.Like(e.Name, $"%{name}%"))
+            .Where(e =>
+                EF.Functions.Like(e.NameEn, $"%{name}%") ||
+                EF.Functions.Like(e.NamePl, $"%{name}%"))
             .Include(e => e.Muscles)
             .ToListAsync();
     }
