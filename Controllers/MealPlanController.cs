@@ -8,7 +8,7 @@ using WebApp.Utill.Meals;
 namespace WebApp.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("meal_plan")]
 public class MealPlanController : ControllerBase
 {
     private readonly IMealPlanService _mealPlanService;
@@ -21,11 +21,16 @@ public class MealPlanController : ControllerBase
     [HttpPost("add")]
     public async Task<IActionResult> AddMealPlan([FromBody] MealPlanDto mealPlanDto)
     {
-        var mealPlan = await _mealPlanService.AddMealPlan(mealPlanDto);
-        var mealPlanfullMealDto = MealPlanUtillity.ParseFullMealPlan(mealPlan);
-        return Ok(mealPlanfullMealDto);
+            var mealPlan = await _mealPlanService.AddMealPlan(mealPlanDto);
+            var mealPlanfullMealDto = MealPlanUtillity.ParseFullMealPlan(mealPlan);
 
+            return Ok(new
+            {
+                success = true,
+                message = "Meal plan added successfully"
+            });
     }
+
 
     [HttpGet("get_all")]
     public async Task<IActionResult> GetMealPlans()
@@ -52,11 +57,7 @@ public async Task<IActionResult> GetMealPlanByCaloriesAmount(int caloriesAmount)
     
     var suggestedMealPlan = new SuggestedMealPlanDto
     {
-        mealPlanList = meals.Select(m => new MealReturnDto(){
-            Id = m.Id,
-            Name = m.Name,
-            Calories = m.CalculatedCalories.ToString(),
-        }).ToList()
+        mealPlanList = meals.Select(m => MealUtillity.ParseToMealDto(m)).ToList()
     };
 
     return Ok(suggestedMealPlan);

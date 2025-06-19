@@ -1,14 +1,24 @@
-﻿using System.Text.Json.Serialization;
-
-namespace WebApp.DTO.Meals;
+﻿using WebApp.DTO.Meals;
 
 public class MealReturnDto
 {
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public int? Id { get; set; }
     public string Name { get; set; }
-    public string Calories { get; set; }
+    public double Calories { get; set; }
+    public double Protein { get; set; }
+    public double Carbs { get; set; }
+    public double Fat { get; set; }
+
+    public int CreatorID { get; set; }
+    public int? EditorID { get; set; }
+    public DateTime CreatedAt { get; set; }
+
+    // This holds the URL or relative path to the image file
+    public string ImageURL { get; set; }
+
+    public string? Description { get; set; }
+    public int? OriginalMealID { get; set; }
+
+    public List<IngredientReturnDTO> Ingredients { get; set; } = new();
     
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public List<string> Ingredients { get; set; }
 }

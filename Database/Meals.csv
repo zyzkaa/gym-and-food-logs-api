@@ -1,19 +1,19 @@
-Id,Name
-1,Owsianka z jogurtem i owocami
-2,Kurczak z ryżem i brokułami
-3,Owsianka z bananami i migdałami
-4,Makaron z indykiem i cukinią
-5,Tofu z ciecierzycą i papryką
-6,Łosoś z ziemniakami i szpinakiem
-7,Jajecznica z szpinakiem i pomidorami
-8,Sardynki z awokado i chlebem pełnoziarnistym
-9,Twaróg z truskawkami i orzechami włoskimi
-10,Grillowana makrela z dynią i fasolką
-11,Kurczak z marchewką i ziemniakami
-12,Owsianka z winogronami i orzechami
-13,Filet z indyka z kukurydzą i brokułami
-14,Krewetki z ryżem i papryką
-15,Tofu z soczewicą i cukinią
-18,Łosoś z ziemniakami i awokado
-19,"Twaróg z bananami, miodem i migdałami"
-20,Grillowana makrela z ziemniakami i brokułami
+Id,CreatedAt,CreatorID,Description,ImageURL,IsShared,Name,OriginalMealID
+1,2025-06-05 01:11:10.458519,1,Pyszne danie: owsianka z jogurtem i owocami.,images\meals\Owsianka_z_jogurtem_i_owocami-2025-06-05_01-11-10.png,1,Owsianka z jogurtem i owocami,1
+2,2025-04-30 03:48:10.458519,1,Pyszne danie: kurczak z ryżem i brokułami.,,1,Kurczak z ryżem i brokułami,2
+3,2025-05-05 16:38:10.458519,1,Pyszne danie: owsianka z bananami i migdałami.,,1,Owsianka z bananami i migdałami,3
+4,2025-04-20 18:44:10.458519,2,Pyszne danie: makaron z indykiem i cukinią.,,1,Makaron z indykiem i cukinią,4
+5,2025-06-03 23:15:10.458519,2,Pyszne danie: tofu z ciecierzycą i papryką.,,1,Tofu z ciecierzycą i papryką,5
+6,2025-04-29 19:24:10.458519,2,Pyszne danie: łosoś z ziemniakami i szpinakiem.,images\meals\Łosoś_z_ziemniakami_i_szpinakiem-2025-04-29_19_24_10.png,1,Łosoś z ziemniakami i szpinakiem,6
+7,2025-06-11 13:17:10.458519,2,Pyszne danie: jajecznica z szpinakiem i pomidorami.,,1,Jajecznica z szpinakiem i pomidorami,7
+8,2025-06-08 14:37:10.458519,3,Pyszne danie: sardynki z awokado i chlebem pełnoziarnistym.,,1,Sardynki z awokado i chlebem pełnoziarnistym,8
+9,2025-04-24 06:35:10.458519,3,Pyszne danie: twaróg z truskawkami i orzechami włoskimi.,,1,Twaróg z truskawkami i orzechami włoskimi,9
+10,2025-04-26 23:11:10.458519,4,Pyszne danie: grillowana makrela z dynią i fasolką.,,1,Grillowana makrela z dynią i fasolką,10
+11,2025-05-01 01:39:10.458519,4,Pyszne danie: kurczak z marchewką i ziemniakami.,,1,Kurczak z marchewką i ziemniakami,11
+12,2025-05-20 06:20:10.458519,4,Pyszne danie: owsianka z winogronami i orzechami.,,1,Owsianka z winogronami i orzechami,12
+13,2025-05-06 12:22:10.458519,5,Pyszne danie: filet z indyka z kukurydzą i brokułami.,,1,Filet z indyka z kukurydzą i brokułami,13
+14,2025-06-06 14:19:10.458519,5,Pyszne danie: krewetki z ryżem i papryką.,,1,Krewetki z ryżem i papryką,14
+15,2025-06-11 21:25:10.458519,5,Pyszne danie: tofu z soczewicą i cukinią.,,1,Tofu z soczewicą i cukinią,15
+18,2025-06-10 13:48:10.458519,6,Pyszne danie: łosoś z ziemniakami i awokado.,,1,Łosoś z ziemniakami i awokado,18
+19,2025-06-06 14:35:10.458519,6,"Pyszne danie: twaróg z bananami, miodem i migdałami.",,1,"Twaróg z bananami, miodem i migdałami",19
+20,2025-04-15 17:50:10.458519,7,Pyszne danie: grillowana makrela z ziemniakami i brokułami.,,1,Grillowana makrela z ziemniakami i brokułami,20
