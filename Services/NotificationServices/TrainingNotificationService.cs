@@ -63,6 +63,47 @@ public static class TrainingNotificationService
         Console.WriteLine($"Status: {response.StatusCode}");
         Console.WriteLine($"Odpowiedź: {responseBody}");
     }
-    
+
+    public static async Task SendPersonal(string token)
+    {
+        var serviceAccountPath = "Services/NotificationServices/firebase.json"; 
+        var scopes = new[] { "https://www.googleapis.com/auth/firebase.messaging" };
+
+        var credential = GoogleCredential.FromFile(serviceAccountPath).CreateScoped(scopes);
+        var accessToken = await credential.UnderlyingCredential.GetAccessTokenForRequestAsync();
+
+        var json = await File.ReadAllTextAsync(serviceAccountPath);
+        var firebaseConfig = JsonSerializer.Deserialize<FirebaseServiceAccount>(json);
+        var projectId = firebaseConfig?.ProjectId ?? throw new Exception("no project_id in firebase.json");
+
+        var url = $"https://fcm.googleapis.com/v1/projects/{projectId}/messages:send";
+
+        var message = new
+        {
+            message = new
+            {
+                token = token,
+                notification = new
+                {
+                    title = "workout_reminder_title",
+                    body = "workout_reminder_body"
+                }
+            }
+        };
+
+        var jsonMessage = JsonConvert.SerializeObject(message);
+
+        using var httpClient = new HttpClient();
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+        var content = new StringContent(jsonMessage, Encoding.UTF8, "application/json");
+        var response = await httpClient.PostAsync(url, content);
+
+        var responseBody = await response.Content.ReadAsStringAsync();
+        Console.WriteLine($"[FCM] Status: {response.StatusCode}");
+        Console.WriteLine($"[FCM] Odpowiedź: {responseBody}");
+    }
+
 
 }

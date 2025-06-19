@@ -24,9 +24,6 @@ public class TrainingController : ControllerBase
     [HttpPost("")]
     public async Task<IActionResult> AddTraining([FromBody] TrainingRequestDto trainingRequestDto)
     {
-        // Console.WriteLine("RECEIVED JSON:");
-        // Console.WriteLine(JsonSerializer.Serialize(trainingRequestDto, new JsonSerializerOptions { WriteIndented = true }));
-
         var trainingResponse = await _trainingService.AddTraining(trainingRequestDto);
         return Ok(trainingResponse);
     }

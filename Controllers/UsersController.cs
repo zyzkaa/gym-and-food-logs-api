@@ -21,9 +21,9 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost("register")]
-    public IActionResult RegisterUser([FromBody] User newUser)
+    public async Task<IActionResult> RegisterUser([FromBody] User newUser)
     {
-        var userResponseDto = _usersService.RegisterUser(newUser);
+        var userResponseDto = await _usersService.RegisterUser(newUser);
         return Ok(userResponseDto);
     }
 
@@ -55,6 +55,13 @@ public class UsersController : ControllerBase
         return Ok(userResponseDto);
     }
 
+    [HttpPost("fcm/{token}")]
+    [Authorize]
+    public async void UpdateFcmToken(string token)
+    {
+        _usersService.SetFcmToken(token);
+    }
+
     [HttpPut("details")]
     // [Authorize]
     public async Task<IActionResult> ChangeUserParameters([FromBody] UserParametersDto userParametersDto)
@@ -68,5 +75,11 @@ public class UsersController : ControllerBase
     public IActionResult GetUser()
     {
         return Ok(_usersService.GetUser());
+    }
+
+    [HttpPost("reminders")]
+    public async void AddReminders([FromBody] RemindersDto remindersDto)
+    {
+        await _usersService.AddReminders(remindersDto);
     }
 }

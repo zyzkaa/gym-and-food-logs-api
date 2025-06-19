@@ -12,6 +12,8 @@ public class User
     [SwaggerSchema(ReadOnly = true)]
     public int Id { get; set; }
     
+    public int Calories { get; set; }
+    
     [Required(ErrorMessage = "Username is required")]
     [StringLength(50, MinimumLength = 3, ErrorMessage = "Username must be between 3 and 50 characters")]
     public string Username { get; set; }
@@ -43,4 +45,7 @@ public class User
     [SwaggerSchema(ReadOnly = true)]
     public List<MealPlan>? MealPlans { get; set; }
     public ICollection<Meal> Meals { get; set; } = new List<Meal>();
+
+    public string? FcmToken { get; set; } = null;
+    public ReminderNotifications? ReminderNotifications { get; set; }
 }

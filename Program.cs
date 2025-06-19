@@ -1,7 +1,5 @@
-using System.Runtime.InteropServices.JavaScript;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Quartz;
 using WebApp;
 using WebApp.Services.ExerciseServices;
 using WebApp.Services.MealPlanServices;
@@ -57,6 +55,20 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddAuthorization();
 builder.Services.AddHttpContextAccessor();
 
+builder.Services.AddQuartz(q =>
+{
+    q.UseMicrosoftDependencyInjectionJobFactory();
+});
+
+builder.Services.AddQuartzHostedService(opt =>
+{
+    opt.WaitForJobsToComplete = true;
+});
+
+builder.Services.AddHttpClient();
+
+
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -72,6 +84,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.UseSession();
+
 
 app.Run();
 
