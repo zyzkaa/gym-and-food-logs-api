@@ -1,21 +1,21 @@
-Id;Name
-1;Squat
-2;Deadlift
-3;Leg Press
-4;Lunge
-5;Leg Extension
-6;Leg Curl
-7;Calf rasie
-8;Bench Press
-9;Push-up
-10;Chest Fly
-11;Pull-down
-12;Pull-up
-13;Bent-over row
-14;Shoulder press
-15;Lateral raise
-16;Shoulder shrug
-17;Tricep pushdown
-18;Biceps curl
-19;Russian twist
-20;Back extension
+Id;NameEn;NamePl
+1;Squat;Przysiad
+2;Deadlift;Martwy ciąg
+3;Leg Press;Wyciskanie nogami
+4;Lunge;Wykrok
+5;Leg Extension;Prostowanie nóg
+6;Leg Curl;Uginanie nóg
+7;Calf rasie;Wspięcia na palce
+8;Bench Press;Wyciskanie na ławce
+9;Push-up;Pompka
+10;Chest Fly;Rozpiętki
+11;Pull-down;Ściąganie drążka
+12;Pull-up;Podciąganie
+13;Bent-over row;Wiosłowanie w opadzie
+14;Shoulder press;Wyciskanie nad głowę
+15;Lateral raise;Unoszenie bokiem
+16;Shoulder shrug;Szrugsy
+17;Tricep pushdown;Prostowanie ramion na wyciągu
+18;Biceps curl;Uginanie przedramion
+19;Russian twist;Skręty tułowia (Russian twist)
+20;Back extension;Prostowanie tułowia
