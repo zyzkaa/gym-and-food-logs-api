@@ -120,13 +120,36 @@ namespace WebApp.Migrations
                     b.Property<int>("CreatorID")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("EditorID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ImageURL")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsShared")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
+
+                    b.Property<int?>("OriginalMealID")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CreatorID");
+
+                    b.HasIndex("EditorID");
+
+                    b.HasIndex("IsShared");
+
+                    b.HasIndex("OriginalMealID");
 
                     b.ToTable("Meals");
                 });
@@ -432,7 +455,21 @@ namespace WebApp.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("WebApp.Entities.User", "Editor")
+                        .WithMany()
+                        .HasForeignKey("EditorID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("WebApp.Entities.Meal", "OriginalMeal")
+                        .WithMany("ClonedMeals")
+                        .HasForeignKey("OriginalMealID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Creator");
+
+                    b.Navigation("Editor");
+
+                    b.Navigation("OriginalMeal");
                 });
 
             modelBuilder.Entity("WebApp.Entities.MealIngredient", b =>
@@ -529,6 +566,8 @@ namespace WebApp.Migrations
 
             modelBuilder.Entity("WebApp.Entities.Meal", b =>
                 {
+                    b.Navigation("ClonedMeals");
+
                     b.Navigation("Ingredients");
                 });
 

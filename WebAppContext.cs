@@ -75,6 +75,25 @@ public class WebAppContext : DbContext
             .WithMany(u => u.Meals) // assuming User has a `public ICollection<Meal> Meals` property
             .HasForeignKey(m => m.CreatorID)
             .OnDelete(DeleteBehavior.Cascade); // or Restrict/SetNull depending on your business logic
+        
+        
+
+        modelBuilder.Entity<Meal>()
+            .HasOne(m => m.OriginalMeal)
+            .WithMany(m => m.ClonedMeals)
+            .HasForeignKey(m => m.OriginalMealID)
+            .OnDelete(DeleteBehavior.Restrict); // Avoid cascade loops
+        
+        
+        modelBuilder.Entity<Meal>()
+            .HasOne(m => m.Editor)
+            .WithMany() // or .WithMany(u => u.EditedMeals) if you have a collection in `User`
+            .HasForeignKey(m => m.EditorID)
+            .OnDelete(DeleteBehavior.Restrict); // Use appropriate delete behavior
+
+        // Optional: Indexes or constraints
+        modelBuilder.Entity<Meal>()
+            .HasIndex(m => m.IsShared);
 
     }
 }

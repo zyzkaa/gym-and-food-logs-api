@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using WebApp;
 using WebApp.Services.ExerciseServices;
+using WebApp.Services.ImagesServices;
 using WebApp.Services.MealPlanServices;
 using WebApp.Services.MealServices;
 using WebApp.Services.TrainingServices;
@@ -31,7 +32,9 @@ builder.Services.AddScoped<ITrainingService, TrainingService>();
 builder.Services.AddScoped<IExerciseService, ExerciseService>();
 builder.Services.AddScoped<IMealService, MealService>();
 builder.Services.AddScoped<IMealPlanService, MealPlanService>();
+builder.Services.AddScoped<IImagesService, ImagesService>();
 builder.Services.AddControllers();
+builder.Logging.SetMinimumLevel(LogLevel.Information);
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
@@ -64,6 +67,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseStaticFiles(); // wazne!
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthentication();
