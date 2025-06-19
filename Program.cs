@@ -1,11 +1,10 @@
-using System.Runtime.InteropServices.JavaScript;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Quartz;
 using WebApp;
 using WebApp.Services.ExerciseServices;
 using WebApp.Services.MealPlanServices;
 using WebApp.Services.MealServices;
+using WebApp.Services.NotificationServices;
 using WebApp.Services.TrainingServices;
 using WebApp.Services.UsersServices;
 
@@ -26,6 +25,7 @@ builder.Services.AddSwaggerGen(options =>
 });
 builder.Services.AddDbContext<WebAppContext>();
 
+builder.Services.AddHostedService<WeeklyNotificationService>();
 builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<ITrainingService, TrainingService>();
 builder.Services.AddScoped<IExerciseService, ExerciseService>();
@@ -54,6 +54,20 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 builder.Services.AddAuthorization();
 builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddQuartz(q =>
+{
+    q.UseMicrosoftDependencyInjectionJobFactory();
+});
+
+builder.Services.AddQuartzHostedService(opt =>
+{
+    opt.WaitForJobsToComplete = true;
+});
+
+builder.Services.AddHttpClient();
+
+
 
 var app = builder.Build();
 

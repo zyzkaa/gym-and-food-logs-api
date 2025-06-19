@@ -26,3 +26,5 @@ obj/
 # Others
 *.vspscc
 .vs/
+
+database.db

@@ -1,11 +1,15 @@
 using System.Security.Claims;
+using Hangfire;
+using Hangfire.Storage;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Quartz;
 using WebApp.DTO;
 using WebApp.Entities;
+using WebApp.Services.NotificationServices;
 
 namespace WebApp.Services.UsersServices;
 
@@ -13,11 +17,13 @@ public class UsersService : IUsersService
 {
     private readonly WebAppContext _dbContext;
     private readonly IHttpContextAccessor _httpContentAccessor;
+    private readonly ISchedulerFactory _schedulerFactory;
     
-    public UsersService(WebAppContext dbContext, IHttpContextAccessor httpContextAccessor)
+    public UsersService(WebAppContext dbContext, IHttpContextAccessor httpContextAccessor, ISchedulerFactory schedulerFactory)
     {   
         _dbContext = dbContext;
         _httpContentAccessor = httpContextAccessor;
+        _schedulerFactory = schedulerFactory;
     }
 
     public GetUserResponseDto GetUser()
@@ -80,11 +86,12 @@ public class UsersService : IUsersService
         };
     }
     
-    public UserResponseDto RegisterUser(User newUser)
+    public async Task<UserResponseDto> RegisterUser(User newUser)
     {
         _dbContext.Users.Add(newUser);
         _dbContext.SaveChanges();
 
+        await LoginUser(new LoginUserDto(newUser.Username, newUser.Password));
         return ParseUserToDto(newUser);
     }
 
@@ -136,4 +143,56 @@ public class UsersService : IUsersService
         
         return ParseUserToDto(user);
     }
+
+    public void SetFcmToken(string token)
+    {
+        var currentUserId = _httpContentAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        var user = _dbContext.Users.FirstOrDefault(u => u.Id == int.Parse(currentUserId));
+        user.FcmToken = token;
+        _dbContext.SaveChanges();
+    }
+
+    public async Task AddReminders(RemindersDto remindersDto)
+    {
+        var userId = int.Parse(_httpContentAccessor.HttpContext!.User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        var user = await _dbContext.Users
+            .Include(u => u.ReminderNotifications)
+            .FirstAsync(u => u.Id == userId);
+
+        var reminder = user.ReminderNotifications ?? new ReminderNotifications();
+        reminder.Time = remindersDto.Time;
+        reminder.Days = remindersDto.Days.Select(d => (WeekDays)d).ToList();
+
+        user.ReminderNotifications = reminder;
+        await _dbContext.SaveChangesAsync();
+
+        var scheduler = await _schedulerFactory.GetScheduler();
+        var jobKey = new JobKey($"reminder-{userId}");
+
+        await scheduler.DeleteJob(jobKey); 
+
+        if (reminder.Days.Any())
+        {
+            var cronDays = string.Join(',', reminder.Days.Select(d => ((int)d == 0 ? 7 : (int)d)));
+            var cron = $"0 {reminder.Time.Minute} {reminder.Time.Hour} ? * {cronDays}";
+            
+            var job = JobBuilder.Create<WorkoutReminderJob>()
+                .WithIdentity(jobKey)
+                .UsingJobData("token", user.FcmToken!)
+                .UsingJobData("userId", userId)
+                .Build();
+
+            var trigger = TriggerBuilder.Create()
+                .WithIdentity($"trigger-{userId}")
+                .WithCronSchedule(cron)
+                .StartNow()
+                .Build();
+
+            await scheduler.ScheduleJob(job, trigger);
+
+            Console.WriteLine($"[QUARTZ] Job {jobKey.Name} scheduled for cron {cron}");
+        }
+    }
+
+
 }

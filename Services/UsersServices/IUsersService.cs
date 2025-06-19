@@ -6,9 +6,11 @@ namespace WebApp.Services.UsersServices;
 
 public interface IUsersService
 {
-    UserResponseDto RegisterUser(User newUser);
+    Task<UserResponseDto> RegisterUser(User newUser);
     Task<UserResponseDto> LoginUser(LoginUserDto loginUserDto);
     Task<UserResponseDto> LogoutUser();
     GetUserResponseDto GetUser();
     Task<UserResponseDto> ChangeUserParameters(UserParametersDto userParametersDto);
+    void SetFcmToken(string fcmToken);
+    Task AddReminders(RemindersDto remindersDto);
 }

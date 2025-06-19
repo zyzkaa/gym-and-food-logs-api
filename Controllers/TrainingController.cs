@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +22,7 @@ public class TrainingController : ControllerBase
     }
 
     [HttpPost("")]
-    public async Task<IActionResult> AddTraining(TrainingRequestDto trainingRequestDto)
+    public async Task<IActionResult> AddTraining([FromBody] TrainingRequestDto trainingRequestDto)
     {
         var trainingResponse = await _trainingService.AddTraining(trainingRequestDto);
         return Ok(trainingResponse);

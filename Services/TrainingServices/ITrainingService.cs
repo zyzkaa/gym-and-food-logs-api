@@ -5,7 +5,7 @@ namespace WebApp.Services.TrainingServices;
 
 public interface ITrainingService
 {
-    public Task<TrainingShortResponseDto> AddTraining(TrainingRequestDto trainingRequestDto);
+    public Task<TrainingResponseDtoRec> AddTraining(TrainingRequestDto trainingRequestDto);
     public Task<List<Training>> GetTrainings(int page, int amount);
     public Task<Training> GetTrainingById(int trainingId);
     public Task<List<Training>> GetTrainingsByDate(DateOnly date);

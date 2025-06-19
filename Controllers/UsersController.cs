@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.DTO;
 using WebApp.Entities;
+using WebApp.Services.NotificationServices;
 using WebApp.Services.UsersServices;
 
 namespace WebApp.Controllers;
@@ -20,9 +21,9 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost("register")]
-    public IActionResult RegisterUser([FromBody] User newUser)
+    public async Task<IActionResult> RegisterUser([FromBody] User newUser)
     {
-        var userResponseDto = _usersService.RegisterUser(newUser);
+        var userResponseDto = await _usersService.RegisterUser(newUser);
         return Ok(userResponseDto);
     }
 
@@ -40,12 +41,25 @@ public class UsersController : ControllerBase
         var userResponseDto = await _usersService.LoginUser(new LoginUserDto("user1", "password123"));
     }
 
+    [HttpGet("notification")]
+    public async void SendNotification()
+    {
+        await TrainingNotificationService.SendAsync();
+    }
+
     [HttpPost("logout")]
     // [Authorize]
     public async Task<IActionResult> LogoutUser()
     {
         var userResponseDto = await _usersService.LogoutUser();
         return Ok(userResponseDto);
+    }
+
+    [HttpPost("fcm/{token}")]
+    [Authorize]
+    public async void UpdateFcmToken(string token)
+    {
+        _usersService.SetFcmToken(token);
     }
 
     [HttpPut("details")]
@@ -61,5 +75,11 @@ public class UsersController : ControllerBase
     public IActionResult GetUser()
     {
         return Ok(_usersService.GetUser());
+    }
+
+    [HttpPost("reminders")]
+    public async void AddReminders([FromBody] RemindersDto remindersDto)
+    {
+        await _usersService.AddReminders(remindersDto);
     }
 }
