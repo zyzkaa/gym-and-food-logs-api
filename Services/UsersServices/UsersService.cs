@@ -91,7 +91,7 @@ public class UsersService : IUsersService
         _dbContext.Users.Add(newUser);
         _dbContext.SaveChanges();
 
-        await LoginUser(new LoginUserDto(newUser.Username, newUser.Password));
+        // await LoginUser(new LoginUserDto(newUser.Username, newUser.Password));
         return ParseUserToDto(newUser);
     }
 
